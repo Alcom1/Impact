@@ -25,20 +25,6 @@ app.main =
    	lastTime: 0, // used by calculateDeltaTime() 
     debug: true,
 	
-	NUM_CIRCLES_START: 5,
-	START_RADIUS: 8,
-	MAX_SPEED: 80,
-	CIRCLE_STATE:	//Fake enumeration, actually an object literal
-	{
-		NORMAL: 0,
-		EXPLODING: 1,
-		MAX_SIZE: 2,
-		IMPLODING: 3,
-		DONE: 4
-	},
-	
-	circles : [],
-	numCircles: this.NUM_CIRCLES_START,
 	paused: false,
 	animationID: 0,
 	
@@ -51,11 +37,6 @@ app.main =
 		this.canvas.width = this.WIDTH;
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
-		
-		//Circles!
-		this.numCircles = this.NUM_CIRCLES_START;
-		this.circles = this.makeCircles(this.numCircles);
-		console.log("this.circles = " + this.circles);
 		
 		// start the game loop
 		this.update();
@@ -74,26 +55,18 @@ app.main =
 	 	var dt = this.calculateDeltaTime();
 	 	 
 	 	// 4) UPDATE
-	 	// move circles
-		this.moveCircles(dt);
-		// Bounce circles
-	 	
-		// 5) DRAW	
-		// i) draw background
-		this.ctx.fillStyle = "black"; 
-		this.ctx.fillRect(0,0,this.WIDTH,this.HEIGHT); 
+		
+		// 5a) DRAW
+		this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 	
-		// ii) draw circles
-		this.drawCircles(this.ctx);
-	
-		// iii) draw HUD
+		// 5b) draw HUD
 		if(this.paused)
 		{
 			this.drawPauseScreen(this.ctx);
 			return;
 		}
 		
-		// iv) draw debug info
+		// 5c) draw debug info
 		if (this.debug)
 		{
 			// draw dt in bottom right corner
@@ -123,92 +96,6 @@ app.main =
 		fps = clamp(fps, 12, 60);
 		this.lastTime = now; 
 		return 1/fps;
-	},
-	
-	circleHitLeftRight: function (c)
-	{
-		if(c.x < c.radius || c.x > this.WIDTH - c.radius)
-		{
-			return true;
-		}
-	},
-	
-	circleHitTopBottom: function (c)
-	{
-		if(c.y < c.radius || c.y > this.HEIGHT - c.radius)
-		{
-			return true;
-		}
-	},
-	
-	makeCircles: function(num)
-	{
-		var circleDraw = function(ctx)
-		{
-			ctx.save();
-			ctx.beginPath();
-			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-			ctx.closePath();
-			ctx.fillStyle = this.fillStyle;
-			ctx.fill();
-			ctx.restore();
-		}
-		
-		var circleMove = function(dt)
-		{
-			this.x += this.xSpeed * this.speed * dt;
-			this.y += this.ySpeed * this.speed * dt;
-		}
-		
-		var array = [];
-		for(var i = 0; i < num; i++)
-		{
-			var c = {};
-			
-			c.x = getRandom(this.START_RADIUS * 2, this.WIDTH, this.START_RADIUS * 2);
-			c.y = getRandom(this.START_RADIUS * 2, this.HEIGHT, this.START_RADIUS * 2);
-			
-			c.radius = this.START_RADIUS;
-			
-			var randomVector = getRandomUnitVector();
-			c.xSpeed = randomVector.x;
-			c.ySpeed = randomVector.y;
-			
-			c.speed = this.MAX_SPEED;
-			c.fillStyle = getRandomColor();
-			c.state = this.CIRCLE_STATE.NORMAL;
-			c.lifetime = 0;
-			
-			c.draw = circleDraw;
-			c.move = circleMove;
-			
-			Object.seal(c);	//Prevents any more properties from being added.
-			array.push(c);
-		}
-		return array;
-	},
-	
-	drawCircles: function(ctx)
-	{
-		for(var i = 0; i < this.circles.length; i++)
-		{
-			var c = this.circles[i];
-			c.draw(ctx);
-		}
-	},
-	
-	moveCircles: function(dt)
-	{
-		for(var i = 0; i < this.circles.length; i++)
-		{
-			var c = this.circles[i];
-			c.move(dt);
-			
-			if(this.circleHitLeftRight(c))
-				c.xSpeed *= -1;
-			if(this.circleHitTopBottom(c))
-				c.ySpeed *= -1;
-		}
 	},
 	
 	drawPauseScreen: function(ctx)

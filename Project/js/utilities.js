@@ -63,7 +63,6 @@ function simplePreload(imageArray)
 	}
 }
 
-
 function loadImagesWithCallback(sources, callback)
 {
 	var imageObjects = [];
@@ -86,7 +85,6 @@ function loadImagesWithCallback(sources, callback)
 		imageObjects[i].src = sources[i];
 	}
 }
-
 
 /*
 Function Name: clamp(val, min, max)
