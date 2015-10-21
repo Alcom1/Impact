@@ -19,14 +19,16 @@ app.main =
 {
 	//  properties
     WIDTH : 640, 
-    HEIGHT: 480,
-    canvas: undefined,
-    ctx: undefined,
-   	lastTime: 0, // used by calculateDeltaTime() 
-    debug: true,
+    HEIGHT : 640,
+    canvas : undefined,
+    ctx : undefined,
+   	lastTime : 0, // used by calculateDeltaTime() 
+    debug : true,
 	
-	paused: false,
-	animationID: 0,
+	paused : false,
+	animationID : 0,
+	
+	testObject : undefined,
 	
     // methods
 	init : function()
@@ -38,11 +40,21 @@ app.main =
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
 		
+		//Test object
+		this.testObject = new Mesh(
+			this.WIDTH / 2, 
+			this.HEIGHT / 2,
+			"#FF0000",
+			"#FFFF00",
+			3);
+			
+		this.testObject.generate();
+		
 		// start the game loop
 		this.update();
 	},
 	
-	update: function()
+	update : function()
 	{
 		// 1) LOOP
 		// schedule a call to update()
@@ -58,6 +70,7 @@ app.main =
 		
 		// 5a) DRAW
 		this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+		this.testObject.draw(this.ctx);
 	
 		// 5b) draw HUD
 		if(this.paused)
@@ -75,7 +88,7 @@ app.main =
 		
 	},
 	
-	fillText: function(string, x, y, css, color)
+	fillText : function(string, x, y, css, color)
 	{
 		this.ctx.save();
 		// https://developer.mozilla.org/en-US/docs/Web/CSS/font
@@ -85,7 +98,7 @@ app.main =
 		this.ctx.restore();
 	},
 	
-	calculateDeltaTime: function()
+	calculateDeltaTime : function()
 	{
 		// what's with (+ new Date) below?
 		// + calls Date.valueOf(), which converts it from an object to a 	
@@ -98,7 +111,7 @@ app.main =
 		return 1/fps;
 	},
 	
-	drawPauseScreen: function(ctx)
+	drawPauseScreen : function(ctx)
 	{
 		ctx.save();
 		ctx.fillStyle = "black";
