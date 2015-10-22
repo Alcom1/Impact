@@ -1,11 +1,21 @@
 var Shape = function()
 {
-	this.vects = [];
+	this.verticies = [];
+}
+
+Shape.prototype.getVertexCount = function()
+{
+	return this.verticies.length;
+}
+
+Shape.prototype.getVertex = function(index)
+{
+	return this.verticies[index];
 }
 
 Shape.prototype.add = function(a, b)
 {
-	this.vects.push(new Vect(a, b, 0));
+	this.verticies.push(new Vect(a, b, 0));
 }
 
 Shape.prototype.generatePolygon = function(edgeCount, radius)
@@ -21,9 +31,9 @@ Shape.prototype.generatePolygon = function(edgeCount, radius)
 Shape.prototype.draw = function(ctx)
 {
 	ctx.beginPath();
-	for(var i = 0; i < this.vects.length; i++)
+	for(var i = 0; i < this.verticies.length; i++)
 	{
-		ctx.lineTo(this.vects[i].xPos, this.vects[i].yPos);
+		ctx.lineTo(this.verticies[i].xPos, this.verticies[i].yPos);
 	}
 	ctx.closePath();
 	ctx.fill();
@@ -32,6 +42,6 @@ Shape.prototype.draw = function(ctx)
 
 Shape.prototype.shrink = function(index)
 {
-	vects.splice(index, 1);
+	verticies.splice(index, 1);
 }
 

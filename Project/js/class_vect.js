@@ -37,6 +37,16 @@ Vect.prototype.mult = function(value)
 	this.yPos *= value;
 }
 
+Vect.prototype.dot = function(value)
+{
+	return this.xPos * value.xPos + this.yPos * value.yPos;
+}
+
+Vect.prototype.cross = function(value)
+{
+	return this.xPos * value.yPos - this.yPos * value.xPos;
+}
+
 //Vector normalization
 Vect.prototype.norm = function()
 {

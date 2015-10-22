@@ -40,6 +40,9 @@ app.main =
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
 		
+		//Hook up mouse events
+		this.canvas.onmousedown = this.doMousedown.bind(this);
+		
 		//Test object
 		this.testObject = new Mesh(
 			this.WIDTH / 2, 
@@ -87,17 +90,7 @@ app.main =
 		}
 		
 	},
-	
-	fillText : function(string, x, y, css, color)
-	{
-		this.ctx.save();
-		// https://developer.mozilla.org/en-US/docs/Web/CSS/font
-		this.ctx.font = css;
-		this.ctx.fillStyle = color;
-		this.ctx.fillText(string, x, y);
-		this.ctx.restore();
-	},
-	
+		
 	calculateDeltaTime : function()
 	{
 		// what's with (+ new Date) below?
@@ -109,6 +102,22 @@ app.main =
 		fps = clamp(fps, 12, 60);
 		this.lastTime = now; 
 		return 1/fps;
+	},
+	
+	fillText : function(string, x, y, css, color)
+	{
+		this.ctx.save();
+		// https://developer.mozilla.org/en-US/docs/Web/CSS/font
+		this.ctx.font = css;
+		this.ctx.fillStyle = color;
+		this.ctx.fillText(string, x, y);
+		this.ctx.restore();
+	},
+
+	doMousedown: function(e)
+	{
+		var mouse = getMouse(e);
+		console.log(mouse.xPos + " " + mouse.yPos);
 	},
 	
 	drawPauseScreen : function(ctx)
