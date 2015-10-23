@@ -70,10 +70,12 @@ app.main =
 	 	var dt = this.calculateDeltaTime();
 	 	 
 	 	// 4) UPDATE
+		this.projectiles.moveProjectiles(dt);
 		
 		// 5a) DRAW
 		this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 		this.testObject.draw(this.ctx);
+		this.projectiles.drawProjectiles(this.ctx);
 	
 		// 5b) draw HUD
 		if(this.paused)
@@ -117,8 +119,9 @@ app.main =
 	doMousedown: function(e)
 	{
 		var mouse = getMouse(e);
-		console.log(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
-		this.testObject.collapse(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
+		//console.log(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
+		//this.testObject.collapse(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
+		this.projectiles.spawnProjectile(mouse, new Vect(this.WIDTH / 2, this.HEIGHT / 2, 0));
 		console.log(mouse.xPos + " " + mouse.yPos);
 	},
 	

@@ -13,6 +13,8 @@ var app = app || {};
 window.onload = function()
 {
 	console.log("window.onload called");
+	app.projectiles.init();
+	app.main.projectiles = app.projectiles;
 	app.sound.init();
 	app.main.sound = app.sound;
 	app.main.init();

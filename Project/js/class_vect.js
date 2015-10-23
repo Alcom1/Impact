@@ -23,11 +23,29 @@ Vect.prototype.add = function(vect)
 	this.yPos += vect.yPos;
 }
 
+//Vect get addition result
+Vect.prototype.getAdd = function(vect)
+{
+	return new Vect(
+		this.xPos + vect.xPos,
+		this.yPos + vect.yPos,
+		0);
+}
+
 //Vector subtraction
 Vect.prototype.sub = function(vect)
 {
 	this.xPos -= vect.xPos;
 	this.yPos -= vect.yPos;
+}
+
+//Vect get subtraction result
+Vect.prototype.getSub = function(vect)
+{
+	return new Vect(
+		this.xPos - vect.xPos,
+		this.yPos - vect.yPos,
+		0);
 }
 
 //Vector multiplication
@@ -37,18 +55,39 @@ Vect.prototype.mult = function(value)
 	this.yPos *= value;
 }
 
-//Vector multiplication
+//Vect get multiplication result
+Vect.prototype.getMult = function(value)
+{
+	console.log(value);
+	return new Vect(
+		this.xPos * value,
+		this.yPos * value, 
+		0);
+}
+
+//Vector division
 Vect.prototype.div = function(value)
 {
 	this.xPos /= value;
 	this.yPos /= value;
 }
 
+//Vect get division result
+Vect.prototype.getDiv = function(value)
+{
+	return new Vect(
+		this.xPos / value,
+		this.yPos / value, 
+		0);
+}
+
+//Return dot product with another vector
 Vect.prototype.dot = function(value)
 {
 	return this.xPos * value.xPos + this.yPos * value.yPos;
 }
 
+//Return cross product with another vector
 Vect.prototype.cross = function(value)
 {
 	return this.xPos * value.yPos - this.yPos * value.xPos;
@@ -62,6 +101,18 @@ Vect.prototype.norm = function()
 		this.yPos * this.yPos);
 	this.xPos /= length;
 	this.yPos /= length;
+}
+
+//Vector get normalization result
+Vect.prototype.getNorm = function()
+{
+	var length = Math.sqrt(
+		this.xPos * this.xPos + 
+		this.yPos * this.yPos);
+	return new Vect(
+		this.xPos / length,
+		this.yPos / length,
+		0);
 }
 
 Vect.prototype.magnitude = function()
