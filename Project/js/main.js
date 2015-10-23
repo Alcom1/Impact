@@ -18,8 +18,8 @@ var app = app || {};
 app.main =
 {
 	//  properties
-    WIDTH : 640, 
-    HEIGHT : 640,
+    WIDTH : 320, 
+    HEIGHT : 320,
     canvas : undefined,
     ctx : undefined,
    	lastTime : 0, // used by calculateDeltaTime() 
@@ -117,6 +117,8 @@ app.main =
 	doMousedown: function(e)
 	{
 		var mouse = getMouse(e);
+		console.log(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
+		this.testObject.collapse(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
 		console.log(mouse.xPos + " " + mouse.yPos);
 	},
 	

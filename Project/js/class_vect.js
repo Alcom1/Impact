@@ -37,6 +37,13 @@ Vect.prototype.mult = function(value)
 	this.yPos *= value;
 }
 
+//Vector multiplication
+Vect.prototype.div = function(value)
+{
+	this.xPos /= value;
+	this.yPos /= value;
+}
+
 Vect.prototype.dot = function(value)
 {
 	return this.xPos * value.xPos + this.yPos * value.yPos;

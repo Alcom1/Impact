@@ -20,6 +20,7 @@ Shape.prototype.add = function(a, b)
 
 Shape.prototype.generatePolygon = function(edgeCount, radius)
 {
+	this.verticies = [];
 	for(var i = 0; i < edgeCount; i++)
 	{
 		this.add(
@@ -40,8 +41,27 @@ Shape.prototype.draw = function(ctx)
 	ctx.stroke();
 }
 
-Shape.prototype.shrink = function(index)
+//Collapse the shape between a vertex at an index and the next vertex.
+Shape.prototype.collapse = function(index)
 {
-	verticies.splice(index, 1);
+	console.log("LOL: " + index);
+	this.verticies[index].xPos =
+		(this.verticies[index].xPos + 
+		this.verticies[(index + 1) % this.getVertexCount()].xPos) / 2;
+	
+	this.verticies[index].yPos =
+		(this.verticies[index].yPos + 
+		this.verticies[(index + 1) % this.getVertexCount()].yPos) / 2;
+		
+	this.verticies.splice((index + 1) % this.getVertexCount(), 1);
+}
+
+//Offset shape away from given vector.
+Shape.prototype.offsetAway = function(offset)
+{
+	for(var i = 0; i < this.getVertexCount(); i++)
+	{
+		this.getVertex(i).sub(offset);
+	}
 }
 
