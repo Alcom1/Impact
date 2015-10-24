@@ -47,8 +47,8 @@ app.main =
 		this.testObject = new Mesh(
 			this.WIDTH / 2, 
 			this.HEIGHT / 2,
-			"#FF0000",
-			"#FFFF00",
+			"#999",
+			"#CCC",
 			3);
 			
 		this.testObject.generate();
@@ -71,6 +71,22 @@ app.main =
 	 	 
 	 	// 4) UPDATE
 		this.projectiles.moveProjectiles(dt);
+		this.projectiles.tickFireRate(dt);
+		var projectilesList = this.projectiles.getList();
+		for(var i = 0; i < projectilesList.length; i++)
+		{
+			if(projectilesList[i].getActive())
+			{
+				console.log(
+					this.testObject.checkCollision(
+						projectilesList[i].getPos().xPos,
+						projectilesList[i].getPos().yPos));
+				if(this.testObject.collapse(this.testObject.checkCollision(projectilesList[i].getPos().xPos, projectilesList[i].getPos().yPos)))
+				{
+					projectilesList[i].kill();
+				}
+			}
+		}
 		
 		// 5a) DRAW
 		this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
@@ -119,9 +135,11 @@ app.main =
 	doMousedown: function(e)
 	{
 		var mouse = getMouse(e);
-		//console.log(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
-		//this.testObject.collapse(this.testObject.checkCollision(mouse.xPos, mouse.yPos));
-		this.projectiles.spawnProjectile(mouse, new Vect(this.WIDTH / 2, this.HEIGHT / 2, 0));
+		
+		if(this.testObject.checkCollision(mouse.xPos, mouse.yPos) == -1)
+		{
+			this.projectiles.spawnProjectile(mouse, new Vect(this.WIDTH / 2, this.HEIGHT / 2, 0));
+		}
 		console.log(mouse.xPos + " " + mouse.yPos);
 	},
 	

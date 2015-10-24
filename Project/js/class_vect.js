@@ -58,7 +58,6 @@ Vect.prototype.mult = function(value)
 //Vect get multiplication result
 Vect.prototype.getMult = function(value)
 {
-	console.log(value);
 	return new Vect(
 		this.xPos * value,
 		this.yPos * value, 

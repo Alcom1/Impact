@@ -10,25 +10,36 @@ app.projectiles = (function()
 	var list = []
 	var speed = 60.0;
 	var fireRate = .4;
+	var fireRateCounter = 0;
 	var lifeTime = 2.0;
 	
 	function init()
 	{
-		var pLength = lifeTime / fireRate;
+		var pLength = Math.ceil(lifeTime / fireRate);
 		for(var i = 0; i < pLength; i++)
 		{
 			list.push(new Projectile(speed));
 		}
 	}
 	
+	function getList()
+	{
+		return list;
+	}
+	
+	
 	function spawnProjectile(pos, des)
 	{
-		for(var i = 0; i < list.length; i++)
+		if(fireRateCounter == 0)
 		{
-			if(!list[i].getActive())
+			for(var i = 0; i < list.length; i++)
 			{
-				list[i].spawn(pos, des, lifeTime);
-				break;
+				if(!list[i].getActive())
+				{
+					list[i].spawn(pos, des, lifeTime);
+					fireRateCounter = fireRate;
+					break;
+				}
 			}
 		}
 	}
@@ -55,11 +66,22 @@ app.projectiles = (function()
 		}
 	}
 	
+	function tickFireRate(dt)
+	{
+		fireRateCounter -= dt;
+		if(fireRateCounter < 0)
+		{
+			fireRateCounter = 0;
+		}
+	}
+	
 	// export a public interface to this module (Why does this need to be same line bracket?)
 	return{
 		init : init,
+		getList : getList,
 		spawnProjectile : spawnProjectile,
 		drawProjectiles : drawProjectiles,
 		moveProjectiles : moveProjectiles,
+		tickFireRate : tickFireRate,
 	}
 }());
