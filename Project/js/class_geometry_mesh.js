@@ -1,3 +1,4 @@
+//Constructor
 var Mesh = function(x, y, colorFill, colorStroke, thickness)
 {
 	this.shape = new Shape();
@@ -7,12 +8,15 @@ var Mesh = function(x, y, colorFill, colorStroke, thickness)
 	this.thickness = thickness;
 }
 
+//Generate mesh
 Mesh.prototype.generate = function()
 {
 	this.shape.generatePolygon(12, 100);
+	this.threshold = this.shape.getAverageEdgeLength() * 1.4;
 	this.shape.getArea();
 }
 
+//Draw mesh
 Mesh.prototype.draw = function(ctx)
 {
 	ctx.save();
@@ -77,7 +81,7 @@ Mesh.prototype.collapse = function(index)
 	this.shape.collapse(index);
 	this.shape.getArea();
 	this.recalcCenter();
-	this.shape.crater(70);
+	this.shape.crater(this.threshold);
 	return true;
 }
 
