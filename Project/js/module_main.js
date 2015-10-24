@@ -18,8 +18,8 @@ var app = app || {};
 app.main =
 {
 	//  properties
-    WIDTH : 320, 
-    HEIGHT : 320,
+    WIDTH : 480, 
+    HEIGHT : 480,
     canvas : undefined,
     ctx : undefined,
    	lastTime : 0, // used by calculateDeltaTime() 
@@ -29,6 +29,7 @@ app.main =
 	animationID : 0,
 	
 	testObject : undefined,
+	testPlayer : undefined,
 	
     // methods
 	init : function()
