@@ -3,11 +3,11 @@
 "use strict";
 
 // returns mouse position in local coordinate system of element
-function getMouse(e)
+function getMouse(e, xOff, yOff)
 {
 	var mouse = new Vect(
-		e.pageX - e.target.offsetLeft,
-		e.pageY - e.target.offsetTop,
+		e.pageX - e.target.offsetLeft - xOff,
+		e.pageY - e.target.offsetTop - yOff,
 		0);
 	return mouse;
 }

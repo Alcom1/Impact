@@ -39,14 +39,15 @@ app.main =
 		this.canvas.width = this.WIDTH;
 		this.canvas.height = this.HEIGHT;
 		this.ctx = this.canvas.getContext('2d');
+		this.ctx.translate(this.WIDTH / 2, this.HEIGHT / 2);
 		
 		//Hook up mouse events
 		this.canvas.onmousedown = this.doMousedown.bind(this);
 		
 		//Test object
 		this.testObject = new Mesh(
-			this.WIDTH / 2, 
-			this.HEIGHT / 2,
+			0, 
+			0,
 			"#999",
 			"#CCC",
 			3);
@@ -85,7 +86,7 @@ app.main =
 		}
 		
 		// 5a) DRAW
-		this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.testObject.draw(this.ctx);
 		this.projectiles.drawProjectiles(this.ctx);
 	
@@ -130,17 +131,18 @@ app.main =
 
 	doMousedown: function(e)
 	{
-		var mouse = getMouse(e);
+		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
 		
 		if(this.testObject.checkCollision(mouse.xPos, mouse.yPos) == -1)
 		{
-			this.projectiles.spawnProjectile(mouse, new Vect(this.WIDTH / 2, this.HEIGHT / 2, 0));
+			this.projectiles.spawnProjectile(mouse, new Vect(0, 0, 0));
 		}
 	},
 	
 	drawPauseScreen : function(ctx)
 	{
 		ctx.save();
+		ctx.translate(-this.WIDTH / 2, -this.HEIGHT / 2);
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		ctx.textAlign = "center";
