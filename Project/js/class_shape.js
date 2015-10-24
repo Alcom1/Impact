@@ -55,6 +55,17 @@ Shape.prototype.getAverageEdgeLength = function()
 	return averageLength;
 }
 
+//Returns the area of the shape
+Shape.prototype.getArea = function()
+{
+	var area = 0;
+	for(var i = 0; i < this.getVertexCount(); i++)
+	{
+		area += Math.abs(this.getVertex(i).cross(this.getVertex((i + 1) % this.getVertexCount())));
+	}
+	return area;
+}
+
 //Returns a vect representing the midpoint between a vertex and the next vertex.
 Shape.prototype.getMidPoint = function(index)
 {

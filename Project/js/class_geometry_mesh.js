@@ -10,7 +10,7 @@ var Mesh = function(x, y, colorFill, colorStroke, thickness)
 Mesh.prototype.generate = function()
 {
 	this.shape.generatePolygon(12, 100);
-	this.calculateArea();
+	this.shape.getArea();
 }
 
 Mesh.prototype.draw = function(ctx)
@@ -75,25 +75,10 @@ Mesh.prototype.collapse = function(index)
 	
 	//Collapse, recalculate area after collapsing, recalculate center to be at center of mesh, and return true.
 	this.shape.collapse(index);
-	this.calculateArea();
+	this.shape.getArea();
 	this.recalcCenter();
 	this.shape.crater(70);
 	return true;
-}
-
-//Calculate the area of the shape.
-Mesh.prototype.calculateArea = function()
-{
-	this.area = 0;
-	for(var i = 0; i < this.shape.getVertexCount(); i++)
-	{
-		this.area += Math.abs(
-			this.shape.getVertex(i).cross(
-				this.shape.getVertex(
-					i + 1 < this.shape.getVertexCount() ?
-					i + 1 :
-					0)));
-	}
 }
 
 //Recalculates the center of the mesh and repositions the mesh so that the mesh doesn't move.
