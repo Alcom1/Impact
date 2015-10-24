@@ -116,5 +116,5 @@ Vect.prototype.getNorm = function()
 
 Vect.prototype.magnitude = function()
 {
-	return Maths.sqrt(a * a + b * b);
+	return Math.sqrt(this.xPos * this.xPos + this.yPos * this.yPos);
 }

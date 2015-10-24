@@ -77,10 +77,6 @@ app.main =
 		{
 			if(projectilesList[i].getActive())
 			{
-				console.log(
-					this.testObject.checkCollision(
-						projectilesList[i].getPos().xPos,
-						projectilesList[i].getPos().yPos));
 				if(this.testObject.collapse(this.testObject.checkCollision(projectilesList[i].getPos().xPos, projectilesList[i].getPos().yPos)))
 				{
 					projectilesList[i].kill();
@@ -140,7 +136,6 @@ app.main =
 		{
 			this.projectiles.spawnProjectile(mouse, new Vect(this.WIDTH / 2, this.HEIGHT / 2, 0));
 		}
-		console.log(mouse.xPos + " " + mouse.yPos);
 	},
 	
 	drawPauseScreen : function(ctx)

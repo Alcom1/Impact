@@ -1,6 +1,5 @@
 var Mesh = function(x, y, colorFill, colorStroke, thickness)
 {
-	this.area = 0;
 	this.shape = new Shape();
 	this.pos = new Vect(x, y, 0);
 	this.colorFill = colorFill;
@@ -78,6 +77,7 @@ Mesh.prototype.collapse = function(index)
 	this.shape.collapse(index);
 	this.calculateArea();
 	this.recalcCenter();
+	this.shape.crater(70);
 	return true;
 }
 
@@ -107,7 +107,7 @@ Mesh.prototype.recalcCenter = function()
 		offset.add(this.shape.getVertex(i));
 	}
 	offset.div(this.shape.getVertexCount());
-
+	
 	//Move the Mesh center to the new position.
 	this.pos.add(offset);
 

@@ -9,7 +9,7 @@ app.projectiles = (function()
 {
 	var list = []
 	var speed = 60.0;
-	var fireRate = .4;
+	var fireRate = .1;
 	var fireRateCounter = 0;
 	var lifeTime = 2.0;
 	
