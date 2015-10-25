@@ -114,6 +114,7 @@ Vect.prototype.getNorm = function()
 		0);
 }
 
+//Get magnitude of the vector.
 Vect.prototype.magnitude = function()
 {
 	return Math.sqrt(this.xPos * this.xPos + this.yPos * this.yPos);

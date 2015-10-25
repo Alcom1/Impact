@@ -67,30 +67,44 @@ app.main =
 	
 	update : function()
 	{
-		// 1) LOOP
-		// schedule a call to update()
+		//LOOP
 	 	this.animationID = requestAnimationFrame(this.update.bind(this));
 	 	
-	 	// 2) PAUSED?
-	 	// if so, bail out of loop
-	 	
-	 	// 3) HOW MUCH TIME HAS GONE BY?
+	 	//Calculate Delta Time of frame
 	 	var dt = this.calculateDeltaTime();
 	 	 
-	 	// 4) UPDATE
-		this.projectiles.moveProjectiles(dt);
-		this.projectiles.tickFireRate(dt);
-		var projectilesList = this.projectiles.getList();
-		for(var i = 0; i < projectilesList.length; i++)
+	 	//UPDATE
+		this.subUpdate(dt);
+		
+		//DRAW
+		this.draw(dt);
+	},
+	
+	subUpdate : function(dt)
+	{
+		this.projectiles.movePlayerProjectiles(dt);
+		this.projectiles.movePlayerDebris(dt);
+		this.projectiles.tickPlayerFireRate(dt);
+		var playerProjectiles = this.projectiles.getPlayerProjectiles();
+		for(var i = 0; i < playerProjectiles.length; i++)
 		{
-			if(projectilesList[i].getActive())
+			if(playerProjectiles[i].getActive())
 			{
-				if(this.testObject.collapse(this.testObject.checkCollision(projectilesList[i].getPos().xPos, projectilesList[i].getPos().yPos)))
+				if(this.testObject.collapse(this.testObject.checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
 				{
-					projectilesList[i].kill();
+					playerProjectiles[i].kill();
 				}
 			}
 		}
+		
+		if(this.testPlayer.active && this.testObject.checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
+		{
+			this.testPlayer.kill();
+			this.projectiles.spawnPlayerDebris(
+				this.testPlayer.pos,
+				this.testPlayer.vel);
+		}
+		
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])
 		{
 			this.testPlayer.vel.yPos -= 8 * dt;
@@ -108,12 +122,15 @@ app.main =
 			this.testPlayer.vel.xPos -= 8 * dt;
 		}
 		this.testPlayer.move();
-		
-		// 5a) DRAW
+	},
+	
+	draw : function(dt)
+	{
 		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.testObject.draw(this.ctx);
 		this.testPlayer.draw(this.ctx);
-		this.projectiles.drawProjectiles(this.ctx);
+		this.projectiles.drawPlayerProjectiles(this.ctx);
+		this.projectiles.drawPlayerDebris(this.ctx);
 	
 		// 5b) draw HUD
 		if(this.paused)
@@ -126,9 +143,8 @@ app.main =
 		if (this.debug)
 		{
 			// draw dt in bottom right corner
-			this.fillText("dt: " + dt.toFixed(3), this.WIDTH - 150, this.HEIGHT - 10, "18pt courier", "white");
+			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
 		}
-		
 	},
 		
 	calculateDeltaTime : function()
@@ -153,12 +169,13 @@ app.main =
 		this.ctx.fillText(string, x, y);
 		this.ctx.restore();
 	},
-
+	
 	doMousedown: function(e)
 	{
 		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
 		
-		this.projectiles.spawnProjectile(this.testPlayer.pos, mouse);
+		if(this.testPlayer.active)
+			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
 	},
 	
 	drawPauseScreen : function(ctx)

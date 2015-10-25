@@ -7,81 +7,135 @@ var app = app || {};
 // define the .projectiles module and immediately invoke it in an IIFE
 app.projectiles = (function()
 {
-	var list = []
-	var speed = 110.0;
-	var fireRate = .1;
-	var fireRateCounter = 0;
-	var lifeTime = 2.0;
+	var playerProjectiles = [];
+	var pPSpeed = 110.0;
+	var pPFireRate = .1;
+	var pPFireRateCounter = 0;
+	var pPLifeTime = 2.0;
+	var pPRadius = 3;
+	var pPColorFill = "#FFA";
+	var pPColorStroke = "rgba(255, 255, 0, .5)";
+	var pPThickness = 2;
+	
+	var playerDebris = [];
+	var pDSpeedMin = 5;
+	var pDSpeedRange = 30;
+	var pDLength = 20;
+	var pDLifeTime = 3;
+	var pDRadius = 4;
+	var pDColorFill = "rgba(0, 0, 255, .6)";
+	var pDColorStroke = "rgba(170, 170, 255, .4)";
+	var pDThickness = 2;
 	
 	function init()
 	{
-		var pLength = Math.ceil(lifeTime / fireRate);
-		for(var i = 0; i < pLength; i++)
+		var pPLength = Math.ceil(pPLifeTime / pPFireRate);
+		for(var i = 0; i < pPLength; i++)
 		{
-			list.push(new Projectile(speed));
+			playerProjectiles.push(new Projectile(pPSpeed));
+		}
+		for(var i = 0; i < pDLength; i++)
+		{
+			playerDebris.push(new Projectile(Math.random() * pDSpeedRange + pDSpeedMin));
 		}
 	}
 	
-	function getList()
+	function getPlayerProjectiles()
 	{
-		return list;
+		return playerProjectiles;
 	}
 	
 	
-	function spawnProjectile(pos, des)
+	function spawnPlayerProjectile(pos, des)
 	{
-		if(fireRateCounter == 0)
+		if(pPFireRateCounter == 0)
 		{
-			for(var i = 0; i < list.length; i++)
+			for(var i = 0; i < playerProjectiles.length; i++)
 			{
-				if(!list[i].getActive())
+				if(playerProjectiles[i].spawn(
+					new Vect(pos.xPos, pos.yPos, 0), 
+					des,
+					pPLifeTime,
+					pPRadius,
+					pPColorFill,
+					pPColorStroke,
+					pPThickness,
+					0))
 				{
-					list[i].spawn(new Vect(pos.xPos, pos.yPos, 0), des, lifeTime);
-					fireRateCounter = fireRate;
+					pPFireRateCounter = pPFireRate;
 					break;
 				}
 			}
 		}
 	}
 	
-	function drawProjectiles(ctx)
+	function drawPlayerProjectiles(ctx)
 	{
-		for(var i = 0; i < list.length; i++)
+		for(var i = 0; i < playerProjectiles.length; i++)
 		{
-			if(list[i].getActive())
-			{
-				list[i].draw(ctx);
-			}
+			playerProjectiles[i].draw(ctx);
 		}
 	}	
 	
-	function moveProjectiles(dt)
+	function movePlayerProjectiles(dt)
 	{
-		for(var i = 0; i < list.length; i++)
+		for(var i = 0; i < playerProjectiles.length; i++)
 		{
-			if(list[i].getActive())
-			{
-				list[i].move(dt);
-			}
+			playerProjectiles[i].move(dt);
 		}
 	}
 	
-	function tickFireRate(dt)
+	function tickPlayerFireRate(dt)
 	{
-		fireRateCounter -= dt;
-		if(fireRateCounter < 0)
+		pPFireRateCounter -= dt;
+		if(pPFireRateCounter < 0)
 		{
-			fireRateCounter = 0;
+			pPFireRateCounter = 0;
+		}
+	}
+	
+	function spawnPlayerDebris(pos, vel)
+	{
+		for(var i = 0; i < playerDebris.length; i++)
+		{
+			playerDebris[i].spawn(
+				new Vect(pos.xPos, pos.yPos, 0), 
+				vel,
+				pDLifeTime,
+				pDRadius,
+				pDColorFill,
+				pDColorStroke,
+				pDThickness,
+				1);
+		}
+	}
+	
+	function drawPlayerDebris(ctx)
+	{
+		for(var i = 0; i < playerDebris.length; i++)
+		{
+			playerDebris[i].draw(ctx);
+		}
+	}	
+	
+	function movePlayerDebris(dt)
+	{
+		for(var i = 0; i < playerDebris.length; i++)
+		{
+			playerDebris[i].move(dt);
 		}
 	}
 	
 	// export a public interface to this module (Why does this need to be same line bracket?)
 	return{
 		init : init,
-		getList : getList,
-		spawnProjectile : spawnProjectile,
-		drawProjectiles : drawProjectiles,
-		moveProjectiles : moveProjectiles,
-		tickFireRate : tickFireRate,
+		getPlayerProjectiles : getPlayerProjectiles,
+		spawnPlayerProjectile : spawnPlayerProjectile,
+		drawPlayerProjectiles : drawPlayerProjectiles,
+		movePlayerProjectiles : movePlayerProjectiles,
+		tickPlayerFireRate : tickPlayerFireRate,
+		spawnPlayerDebris : spawnPlayerDebris,
+		drawPlayerDebris : drawPlayerDebris,
+		movePlayerDebris : movePlayerDebris,
 	}
 }());
