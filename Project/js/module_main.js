@@ -52,8 +52,14 @@ app.main =
 			"#999",
 			"#CCC",
 			3);
-			
 		this.testObject.generate();
+		
+		this.testPlayer = new Player(
+			0, 
+			-200,
+			"#00F",
+			"#AAF",
+			3);
 		
 		// start the game loop
 		this.update();
@@ -85,10 +91,28 @@ app.main =
 				}
 			}
 		}
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])
+		{
+			this.testPlayer.vel.yPos -= 8 * dt;
+		}
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_D])
+		{
+			this.testPlayer.vel.xPos += 8 * dt;
+		}
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_S])
+		{
+			this.testPlayer.vel.yPos += 8 * dt;
+		}
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_A])
+		{
+			this.testPlayer.vel.xPos -= 8 * dt;
+		}
+		this.testPlayer.move();
 		
 		// 5a) DRAW
 		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.testObject.draw(this.ctx);
+		this.testPlayer.draw(this.ctx);
 		this.projectiles.drawProjectiles(this.ctx);
 	
 		// 5b) draw HUD
@@ -134,10 +158,7 @@ app.main =
 	{
 		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
 		
-		if(this.testObject.checkCollision(mouse.xPos, mouse.yPos) == -1)
-		{
-			this.projectiles.spawnProjectile(mouse, new Vect(0, 0, 0));
-		}
+		this.projectiles.spawnProjectile(this.testPlayer.pos, mouse);
 	},
 	
 	drawPauseScreen : function(ctx)

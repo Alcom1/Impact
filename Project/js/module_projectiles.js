@@ -8,7 +8,7 @@ var app = app || {};
 app.projectiles = (function()
 {
 	var list = []
-	var speed = 60.0;
+	var speed = 110.0;
 	var fireRate = .1;
 	var fireRateCounter = 0;
 	var lifeTime = 2.0;
@@ -36,7 +36,7 @@ app.projectiles = (function()
 			{
 				if(!list[i].getActive())
 				{
-					list[i].spawn(pos, des, lifeTime);
+					list[i].spawn(new Vect(pos.xPos, pos.yPos, 0), des, lifeTime);
 					fireRateCounter = fireRate;
 					break;
 				}

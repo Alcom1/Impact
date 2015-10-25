@@ -16,7 +16,7 @@ Player.prototype.draw = function(ctx)
 	ctx.arc(
 		this.pos.xPos, 
 		this.pos.yPos, 
-		20, 
+		12, 
 		0, 
 		Math.PI * 2);
 	ctx.fillStyle = this.colorFill;
@@ -25,4 +25,10 @@ Player.prototype.draw = function(ctx)
 	ctx.fill();
 	ctx.stroke();
 	ctx.restore();
+}
+
+//Offset
+Player.prototype.move = function()
+{
+	this.pos.add(this.vel);
 }

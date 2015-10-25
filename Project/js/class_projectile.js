@@ -19,11 +19,14 @@ Projectile.prototype.draw = function(ctx)
 	ctx.arc(
 		this.pos.xPos, 
 		this.pos.yPos, 
-		5, 
+		3, 
 		0, 
 		Math.PI * 2);
-	ctx.fillStyle = "#FF0";
+	ctx.fillStyle = "#FFA";
+	ctx.strokeStyle = "hsla(60, 100%, 50%, .5)"
+	ctx.lineWidth = 2;
 	ctx.fill();
+	ctx.stroke();
 	ctx.restore();
 }
 
