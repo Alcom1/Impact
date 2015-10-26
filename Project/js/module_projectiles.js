@@ -8,7 +8,7 @@ var app = app || {};
 app.projectiles = (function()
 {
 	var playerProjectiles = [];
-	var pPSpeed = 110.0;
+	var pPSpeed = 300.0;
 	var pPFireRate = .1;
 	var pPFireRateCounter = 0;
 	var pPLifeTime = 2.0;

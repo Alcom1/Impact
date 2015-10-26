@@ -128,7 +128,7 @@ app.main =
 	
 	draw : function(dt)
 	{
-		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		this.drawBackground();
 		this.testObject.draw(this.ctx);
 		this.testPlayer.draw(this.ctx);
 		this.projectiles.drawPlayerProjectiles(this.ctx);
@@ -148,18 +148,51 @@ app.main =
 			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
 		}
 	},
-		
-	calculateDeltaTime : function()
+	
+	drawBackground : function()
 	{
-		// what's with (+ new Date) below?
-		// + calls Date.valueOf(), which converts it from an object to a 	
-		// primitive (number of milliseconds since January 1, 1970 local time)
-		var now,fps;
-		now = (+new Date); 
-		fps = 1000 / (now - this.lastTime);
-		fps = clamp(fps, 12, 60);
-		this.lastTime = now; 
-		return 1/fps;
+		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		this.ctx.save();
+		
+		var lineWidth = 3;
+		
+		//Border
+		this.ctx.beginPath();
+		this.ctx.rect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		this.ctx.fillStyle = "#999";
+		this.ctx.fill();
+		this.ctx.restore();
+		
+		//Black space
+		this.ctx.beginPath();
+		this.ctx.arc(
+			0,
+			0,
+			this.HEIGHT / 2 - lineWidth / 2,
+			0,
+			Math.PI * 2);
+		this.ctx.fillStyle = "#000";
+		this.ctx.strokeStyle = "#CCC";
+		this.ctx.lineWidth = 3;
+		this.ctx.fill();
+		this.ctx.stroke();
+	},
+	
+	drawPauseScreen : function(ctx)
+	{
+		ctx.save();
+		ctx.translate(-this.WIDTH / 2, -this.HEIGHT / 2);
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		this.fillText(
+			"... PAUSED ...",
+			this.WIDTH / 2,
+			this.HEIGHT / 2, 
+			"40pt courier",
+			"white");
+		ctx.restore()
 	},
 	
 	fillText : function(string, x, y, css, color)
@@ -180,20 +213,16 @@ app.main =
 			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
 	},
 	
-	drawPauseScreen : function(ctx)
+	calculateDeltaTime : function()
 	{
-		ctx.save();
-		ctx.translate(-this.WIDTH / 2, -this.HEIGHT / 2);
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-		this.fillText(
-			"... PAUSED ...",
-			this.WIDTH / 2,
-			this.HEIGHT / 2, 
-			"40pt courier",
-			"white");
-		ctx.restore()
+		// what's with (+ new Date) below?
+		// + calls Date.valueOf(), which converts it from an object to a 	
+		// primitive (number of milliseconds since January 1, 1970 local time)
+		var now,fps;
+		now = (+new Date); 
+		fps = 1000 / (now - this.lastTime);
+		fps = clamp(fps, 12, 60);
+		this.lastTime = now; 
+		return 1/fps;
 	},
 }; // end app.main

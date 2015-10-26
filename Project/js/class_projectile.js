@@ -39,8 +39,6 @@ Projectile.prototype.spawn = function(pos, des, lifeTime, radius, colorFill, col
 		this.colorFill = colorFill;
 		this.colorStroke = colorStroke;
 		this.thickness = thickness;
-		console.log(des);
-		console.log(new Vect(Math.random() * Math.PI * 2, this.speed, 1));
 		return true;
 	}
 	return false;
@@ -51,7 +49,6 @@ Projectile.prototype.draw = function(ctx)
 {	
 	if(this.active)	//Only draw if active
 	{
-		console.log(this.radius);
 		ctx.save();
 		ctx.beginPath();
 		ctx.arc(
