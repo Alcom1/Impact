@@ -24,6 +24,14 @@ app.main =
     ctx : undefined,
    	lastTime : 0, // used by calculateDeltaTime() 
     debug : true,
+	gameState : undefined,
+	
+	GAME_STATE: Object.freeze
+	({
+		MENU : 0,
+		GAME : 1,
+		RESULT : 2,
+	}),
 	
 	paused : false,
 	animationID : 0,
@@ -45,7 +53,10 @@ app.main =
 		//Hook up mouse events
 		this.canvas.onmousedown = this.doMousedown.bind(this);
 		
-		//Test object
+		//Game State
+		this.gameState = this.GAME_STATE.GAME;
+		
+		//Test objects
 		this.testObject = new Mesh(
 			0, 
 			0,
@@ -53,7 +64,6 @@ app.main =
 			"#CCC",
 			3);
 		this.testObject.generate();
-		
 		this.testPlayer = new Player(
 			0, 
 			-200,
@@ -74,14 +84,35 @@ app.main =
 	 	//Calculate Delta Time of frame
 	 	var dt = this.calculateDeltaTime();
 	 	 
-	 	//UPDATE
-		this.subUpdate(dt);
-		
-		//DRAW
-		this.draw(dt);
+	 	//UPDATE-DRAW
+		switch(this.gameState)
+		{
+			case 0:
+				this.updateMenu(dt);
+				this.drawMenu(dt);
+				break;
+			case 1:
+				this.updateGame(dt);
+				this.drawGame(dt);
+				break;
+			case 2:
+				this.updateResult(dt);
+				this.drawResult(dt);
+				break;
+		}
 	},
 	
-	subUpdate : function(dt)
+	updateMenu : function(dt)
+	{
+		
+	},
+	
+	drawMenu : function(dt)
+	{
+		
+	},
+	
+	updateGame : function(dt)
 	{
 		this.projectiles.movePlayerProjectiles(dt);
 		this.projectiles.movePlayerDebris(dt);
@@ -91,6 +122,10 @@ app.main =
 		{
 			if(playerProjectiles[i].getActive())
 			{
+				if(playerProjectiles[i].pos.magnitude() > this.HEIGHT / 2)
+				{
+					playerProjectiles[i].kill();
+				}
 				if(this.testObject.collapse(this.testObject.checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
 				{
 					playerProjectiles[i].kill();
@@ -103,7 +138,7 @@ app.main =
 			this.killPlayer();
 		}
 		
-		if(this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
+		if(this.testPlayer.active && this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
 		{
 			this.killPlayer();
 		}
@@ -128,30 +163,14 @@ app.main =
 		this.testPlayer.move();
 	},
 	
-	doMousedown: function(e)
-	{
-		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
-		
-		if(this.testPlayer.active)
-			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
-	},
-	
-	killPlayer: function()
-	{
-		this.testPlayer.kill();
-		this.projectiles.spawnPlayerDebris(
-			this.testPlayer.pos,
-			this.testPlayer.vel);
-	},
-	
-	draw : function(dt)
+	drawGame : function(dt)
 	{
 		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground();
-		this.projectiles.drawPlayerProjectiles(this.ctx);
-		this.projectiles.drawPlayerDebris(this.ctx);
 		this.testObject.draw(this.ctx);
 		this.testPlayer.draw(this.ctx);
+		this.projectiles.drawPlayerProjectiles(this.ctx);
+		this.projectiles.drawPlayerDebris(this.ctx);
 	
 		// 5b) draw HUD
 		if(this.paused)
@@ -166,6 +185,32 @@ app.main =
 			// draw dt in bottom right corner
 			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
 		}
+	},
+	
+	updateResult : function(dt)
+	{
+		
+	},
+	
+	drawResult : function(dt)
+	{
+		
+	},
+	
+	doMousedown: function(e)
+	{
+		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
+		
+		if(this.testPlayer.active)
+			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
+	},
+	
+	killPlayer: function()
+	{
+		this.testPlayer.kill();
+		this.projectiles.spawnPlayerDebris(
+			this.testPlayer.pos,
+			this.testPlayer.vel);
 	},
 	
 	drawBackground : function()

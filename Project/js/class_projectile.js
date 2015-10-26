@@ -24,13 +24,14 @@ Projectile.prototype.spawn = function(pos, des, lifeTime, radius, colorFill, col
 	{
 		var randomNormVect = new Vect(Math.random() * Math.PI * 2, 1, 1);
 		this.active = true;
-		this.pos = pos.getAdd(randomNormVect.getMult(5));
 		switch(choice)
 		{
 			case 0:
+				this.pos = pos;
 				this.vel = des.getSub(pos).getNorm().getMult(this.speed);
 				break;
 			case 1:
+				this.pos = pos.getAdd(randomNormVect.getMult(5));
 				this.vel = des.getMult(10).getAdd(randomNormVect.getMult(this.speed, 1));
 				break;
 		}
