@@ -57,6 +57,7 @@ app.main =
 		this.testPlayer = new Player(
 			0, 
 			-200,
+			3,
 			"#00F",
 			"#AAF",
 			3);
@@ -121,6 +122,7 @@ app.main =
 		{
 			this.testPlayer.vel.xPos -= 8 * dt;
 		}
+		this.testPlayer.limitSpeed();
 		this.testPlayer.move();
 	},
 	

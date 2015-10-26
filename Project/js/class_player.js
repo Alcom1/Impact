@@ -1,8 +1,9 @@
 //Constructor
-var Player = function(x, y, colorFill, colorStroke, thickness)
+var Player = function(x, y, maxSpeed, colorFill, colorStroke, thickness)
 {
 	this.pos = new Vect(x, y, 0);
 	this.vel = new Vect(0, 0, 0);
+	this.maxSpeed = maxSpeed;
 	this.colorFill = colorFill;
 	this.colorStroke = colorStroke;
 	this.thickness = thickness;
@@ -37,6 +38,14 @@ Player.prototype.move = function()
 	if(this.active)
 	{
 		this.pos.add(this.vel);
+	}
+}
+
+Player.prototype.limitSpeed = function()
+{
+	if(this.vel.magnitude() > this.maxSpeed)
+	{
+		this.vel = this.vel.getNorm().getMult(this.maxSpeed);
 	}
 }
 
