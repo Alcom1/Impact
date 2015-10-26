@@ -100,10 +100,12 @@ app.main =
 		
 		if(this.testPlayer.active && this.testObject.checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
 		{
-			this.testPlayer.kill();
-			this.projectiles.spawnPlayerDebris(
-				this.testPlayer.pos,
-				this.testPlayer.vel);
+			this.killPlayer();
+		}
+		
+		if(this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
+		{
+			this.killPlayer();
 		}
 		
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])
@@ -126,13 +128,30 @@ app.main =
 		this.testPlayer.move();
 	},
 	
+	doMousedown: function(e)
+	{
+		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
+		
+		if(this.testPlayer.active)
+			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
+	},
+	
+	killPlayer: function()
+	{
+		this.testPlayer.kill();
+		this.projectiles.spawnPlayerDebris(
+			this.testPlayer.pos,
+			this.testPlayer.vel);
+	},
+	
 	draw : function(dt)
 	{
+		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground();
-		this.testObject.draw(this.ctx);
-		this.testPlayer.draw(this.ctx);
 		this.projectiles.drawPlayerProjectiles(this.ctx);
 		this.projectiles.drawPlayerDebris(this.ctx);
+		this.testObject.draw(this.ctx);
+		this.testPlayer.draw(this.ctx);
 	
 		// 5b) draw HUD
 		if(this.paused)
@@ -151,7 +170,6 @@ app.main =
 	
 	drawBackground : function()
 	{
-		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.ctx.save();
 		
 		var lineWidth = 3;
@@ -203,14 +221,6 @@ app.main =
 		this.ctx.fillStyle = color;
 		this.ctx.fillText(string, x, y);
 		this.ctx.restore();
-	},
-	
-	doMousedown: function(e)
-	{
-		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
-		
-		if(this.testPlayer.active)
-			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
 	},
 	
 	calculateDeltaTime : function()
