@@ -13,10 +13,20 @@ var app = app || {};
 window.onload = function()
 {
 	console.log("window.onload called");
+	
+	//Levels module
+	app.levels.init();
+	app.main.levels = app.levels;
+	
+	//Projectiles module
 	app.projectiles.init();
 	app.main.projectiles = app.projectiles;
+	
+	//Sound module
 	app.sound.init();
 	app.main.sound = app.sound;
+	
+	//Main module
 	app.main.init();
 }
 	
