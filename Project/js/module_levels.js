@@ -7,32 +7,33 @@ var app = app || {};
 // define the .projectiles module and immediately invoke it in an IIFE
 app.levels = (function()
 {
-	var level = [];
+	var levels = [];
 	
 	function init()
 	{
 		var level0 = {};
 		
 		//Level 0
-		level0.mesh = [];
-		level0.mesh.push(new Mesh(
+		level0.meshes = [];
+		level0.meshes.push(new Mesh(
 			0, 
 			0,
 			"#999",
 			"#CCC",
 			3));
 		level0.turrets = []; 
+		levels.push(level0);
 	}
 	
 	function getMeshes(index)
 	{
-		var meshes = level[i].meshes;
+		var meshes = levels[index].meshes;
 		return meshes;
 	}
 	
 	function getTurrets(index)
 	{
-		var turrets = level[i].turrets;
+		var turrets = levels[index].turrets;
 		return turrets;
 	}
 	
@@ -40,6 +41,6 @@ app.levels = (function()
 	return{
 		init : init,
 		getMeshes : getMeshes,
-		getTurrets : getTurrets
+		getTurrets : getTurrets, 
 	}
 }());

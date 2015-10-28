@@ -33,7 +33,9 @@ app.main =
 		RESULT : 2,
 	}),
 	
-	level: 0,
+	levelNum: 0,
+	meshes: undefined,
+	turrets: undefined,
 	
 	paused : false,
 	animationID : 0,
@@ -54,6 +56,9 @@ app.main =
 		
 		//Hook up mouse events
 		this.canvas.onmousedown = this.doMousedown.bind(this);
+		
+		//Load the first level
+		this.loadLevel();
 		
 		//Game State
 		this.gameState = this.GAME_STATE.GAME;
@@ -282,4 +287,10 @@ app.main =
 		this.lastTime = now; 
 		return 1/fps;
 	},
+	
+	loadLevel : function()
+	{
+		this.meshes = this.levels.getMeshes(this.levelNum);
+		this.turrets = this.levels.getTurrets(this.levelNum);
+	}
 }; // end app.main
