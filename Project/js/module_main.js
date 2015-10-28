@@ -33,6 +33,8 @@ app.main =
 		RESULT : 2,
 	}),
 	
+	level: 0,
+	
 	paused : false,
 	animationID : 0,
 	
