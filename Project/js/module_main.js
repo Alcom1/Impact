@@ -322,5 +322,8 @@ app.main =
 		//Player start
 		this.testPlayer.pos = this.levels.getStart(this.levelNum);
 		this.testPlayer.vel = new Vect(0, 0, 0);
+		
+		//Kill projectiles
+		this.projectiles.reset();
 	}
 }; // end app.main

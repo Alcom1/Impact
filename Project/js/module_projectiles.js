@@ -126,6 +126,14 @@ app.projectiles = (function()
 		}
 	}
 	
+	function reset()
+	{
+		for(var i = 0; i < playerProjectiles.length; i++)
+		{
+			playerProjectiles[i].kill();
+		}
+	}
+	
 	// export a public interface to this module (Why does this need to be same line bracket?)
 	return{
 		init : init,
@@ -137,5 +145,6 @@ app.projectiles = (function()
 		spawnPlayerDebris : spawnPlayerDebris,
 		drawPlayerDebris : drawPlayerDebris,
 		movePlayerDebris : movePlayerDebris,
+		reset : reset,
 	}
 }());
