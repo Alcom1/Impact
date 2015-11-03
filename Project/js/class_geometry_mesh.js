@@ -1,17 +1,19 @@
 //Constructor
-var Mesh = function(x, y, colorFill, colorStroke, thickness)
+var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius)
 {
 	this.shape = new Shape();
 	this.pos = new Vect(x, y, 0);
 	this.colorFill = colorFill;
 	this.colorStroke = colorStroke;
 	this.thickness = thickness;
+	this.edgeCount = edgeCount;
+	this.radius = radius;
 }
 
 //Generate mesh
 Mesh.prototype.generate = function()
 {
-	this.shape.generatePolygon(12, 100);
+	this.shape.generatePolygon(this.edgeCount, this.radius);
 	this.threshold = this.shape.getAverageEdgeLength() * 1.4;
 	this.shape.getArea();
 }
@@ -102,4 +104,14 @@ Mesh.prototype.recalcCenter = function()
 
 	//Move the geometry so that the mesh doesn't move.
 	this.shape.offsetAway(offset);
+}
+
+Mesh.prototype.getDead = function()
+{
+	if(this.shape.getArea() == 0)
+	{
+		return true;
+	}
+	
+	return false;
 }

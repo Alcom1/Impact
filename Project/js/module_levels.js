@@ -11,18 +11,36 @@ app.levels = (function()
 	
 	function init()
 	{
-		var level0 = {};
 		
 		//Level 0
+		var level0 = {};
 		level0.meshes = [];
 		level0.meshes.push(new Mesh(
 			0, 
 			0,
 			"#999",
 			"#CCC",
-			3));
-		level0.turrets = []; 
+			3,
+			6,
+			100));
+		level0.turrets = [];
+		level0.start = new Vect(0, -200, 0);
 		levels.push(level0);
+		
+		//Level 1
+		var level1 = {};
+		level1.meshes = [];
+		level1.meshes.push(new Mesh(
+			0, 
+			0,
+			"#999",
+			"#CCC",
+			3,
+			12,
+			100));
+		level1.turrets = []; 
+		level1.start = new Vect(0, -200, 0);
+		levels.push(level1);
 	}
 	
 	function getMeshes(index)
@@ -37,10 +55,16 @@ app.levels = (function()
 		return turrets;
 	}
 	
+	function getStart(index)
+	{
+		return levels[index].start;
+	}
+	
 	// export a public interface to this module. This needs to be a same-like bracket because a new-line bracket creates a new scope!
 	return{
 		init : init,
 		getMeshes : getMeshes,
-		getTurrets : getTurrets, 
+		getTurrets : getTurrets,
+		getStart : getStart,
 	}
 }());

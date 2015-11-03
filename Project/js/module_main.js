@@ -40,7 +40,6 @@ app.main =
 	paused : false,
 	animationID : 0,
 	
-	testObject : undefined,
 	testPlayer : undefined,
 	
     // methods
@@ -57,27 +56,20 @@ app.main =
 		//Hook up mouse events
 		this.canvas.onmousedown = this.doMousedown.bind(this);
 		
-		//Load the first level
-		this.loadLevel();
-		
 		//Game State
 		this.gameState = this.GAME_STATE.GAME;
 		
 		//Test objects
-		this.testObject = new Mesh(
-			0, 
-			0,
-			"#999",
-			"#CCC",
-			3);
-		this.testObject.generate();
 		this.testPlayer = new Player(
 			0, 
-			-200,
+			0,
 			3,
 			"#00F",
 			"#AAF",
 			3);
+		
+		//Load the first level
+		this.loadLevel();
 		
 		// start the game loop
 		this.update();
@@ -133,16 +125,28 @@ app.main =
 				{
 					playerProjectiles[i].kill();
 				}
-				if(this.testObject.collapse(this.testObject.checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
+				
+				for(var j = 0; j < this.meshes.length; j++)
 				{
-					playerProjectiles[i].kill();
+					if(this.meshes[j].collapse(this.meshes[j].checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
+					{
+						playerProjectiles[i].kill();
+						if(this.checkVictory())
+						{
+							this.levelNum++;
+							this.loadLevel();
+						}
+					}
 				}
 			}
 		}
 		
-		if(this.testPlayer.active && this.testObject.checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
-		{
-			this.killPlayer();
+		for(var i = 0; i < this.meshes.length; i++)
+		{		
+			if(this.testPlayer.active && this.meshes[i].checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
+			{
+				this.killPlayer();
+			}
 		}
 		
 		if(this.testPlayer.active && this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
@@ -174,7 +178,10 @@ app.main =
 	{
 		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground();
-		this.testObject.draw(this.ctx);
+		for(var i = 0; i < this.meshes.length; i++)
+		{		
+			this.meshes[i].draw(this.ctx);
+		}
 		this.testPlayer.draw(this.ctx);
 		this.projectiles.drawPlayerProjectiles(this.ctx);
 		this.projectiles.drawPlayerDebris(this.ctx);
@@ -218,6 +225,19 @@ app.main =
 		this.projectiles.spawnPlayerDebris(
 			this.testPlayer.pos,
 			this.testPlayer.vel);
+	},
+	
+	checkVictory : function()
+	{
+		for(var i = 0; i < this.meshes.length; i++)
+		{
+			if(!this.meshes[i].getDead())
+			{
+				return false;
+			}
+		}
+				
+		return true;
 	},
 	
 	drawBackground : function()
@@ -292,5 +312,15 @@ app.main =
 	{
 		this.meshes = this.levels.getMeshes(this.levelNum);
 		this.turrets = this.levels.getTurrets(this.levelNum);
+		
+		//Level objects
+		for(var i = 0; i < this.meshes.length; i++)
+		{
+			this.meshes[i].generate();
+		}
+		
+		//Player start
+		this.testPlayer.pos = this.levels.getStart(this.levelNum);
+		this.testPlayer.vel = new Vect(0, 0, 0);
 	}
 }; // end app.main

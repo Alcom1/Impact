@@ -82,7 +82,8 @@ Shape.prototype.generatePolygon = function(edgeCount, radius)
 			Math.sin(2 * i * Math.PI / edgeCount) * radius,
 			Math.cos(2 * i * Math.PI / edgeCount) * radius);
 	}
-	console.log(this.getAverageEdgeLength());
+	if(edgeCount > 0)
+		console.log(this.getAverageEdgeLength());
 }
 
 //Draw shape
