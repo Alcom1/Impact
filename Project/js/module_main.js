@@ -25,6 +25,7 @@ app.main =
    	lastTime : 0, // used by calculateDeltaTime() 
     debug : true,
 	gameState : undefined,
+	saveImage : undefined,
 	
 	GAME_STATE: Object.freeze
 	({
@@ -57,7 +58,7 @@ app.main =
 		this.canvas.onmousedown = this.doMousedown.bind(this);
 		
 		//Game State
-		this.gameState = this.GAME_STATE.GAME;
+		this.gameState = this.GAME_STATE.MENU;
 		
 		//Test objects
 		this.testPlayer = new Player(
@@ -86,18 +87,32 @@ app.main =
 	 	//UPDATE-DRAW
 		switch(this.gameState)
 		{
-			case 0:
+			case this.GAME_STATE.MENU:
 				this.updateMenu(dt);
-				this.drawMenu(dt);
+				this.drawMenu(dt, this.ctx);
 				break;
-			case 1:
+			case this.GAME_STATE.GAME:
 				this.updateGame(dt);
-				this.drawGame(dt);
+				this.drawGame(dt, this.ctx);
 				break;
-			case 2:
+			case this.GAME_STATE.RESULT:
 				this.updateResult(dt);
-				this.drawResult(dt);
+				this.drawResult(dt, this.ctx);
 				break;
+		}
+	
+		//Draw HUD
+		if(this.paused)
+		{
+			this.drawPauseScreen(this.ctx);
+			return;
+		}
+		
+		//Draw debug info
+		if (this.debug)
+		{
+			// draw dt in bottom right corner
+			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
 		}
 	},
 	
@@ -106,9 +121,26 @@ app.main =
 		
 	},
 	
-	drawMenu : function(dt)
+	drawMenu : function(dt, ctx)
 	{
+		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		this.drawBackground();
 		
+		//Text
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		this.fillText(
+			"IMPACT",
+			0,
+			0, 
+			"40pt impact",
+			"white");
+		this.fillText(
+			"Click to Continue",
+			0,
+			50, 
+			"20pt courier",
+			"white");
 	},
 	
 	updateGame : function(dt)
@@ -133,8 +165,7 @@ app.main =
 						playerProjectiles[i].kill();
 						if(this.checkVictory())
 						{
-							this.levelNum++;
-							this.loadLevel();
+							this.gameState = this.GAME_STATE.RESULT;
 						}
 					}
 				}
@@ -174,30 +205,22 @@ app.main =
 		this.testPlayer.move();
 	},
 	
-	drawGame : function(dt)
+	drawGame : function(dt, ctx)
 	{
-		this.ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground();
 		for(var i = 0; i < this.meshes.length; i++)
 		{		
 			this.meshes[i].draw(this.ctx);
 		}
-		this.testPlayer.draw(this.ctx);
-		this.projectiles.drawPlayerProjectiles(this.ctx);
-		this.projectiles.drawPlayerDebris(this.ctx);
-	
-		// 5b) draw HUD
-		if(this.paused)
-		{
-			this.drawPauseScreen(this.ctx);
-			return;
-		}
+		this.testPlayer.draw(ctx);
+		this.projectiles.drawPlayerProjectiles(ctx);
+		this.projectiles.drawPlayerDebris(ctx);
 		
-		// 5c) draw debug info
-		if (this.debug)
+		//Get data for upcoming result frame.
+		if(this.gameState == this.GAME_STATE.RESULT)
 		{
-			// draw dt in bottom right corner
-			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
+			this.saveImage = this.ctx.getImageData(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH * 2, this.HEIGHT * 2);
 		}
 	},
 	
@@ -206,17 +229,55 @@ app.main =
 		
 	},
 	
-	drawResult : function(dt)
+	drawResult : function(dt, ctx)
 	{
+		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		
+		//Display end of level
+		ctx.putImageData(this.saveImage, -this.WIDTH / 2, -this.HEIGHT / 2);
+		
+		//Blackout
+		ctx.save();
+		ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+		ctx.fillRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
+		ctx.restore();
+		
+		//Text
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		this.fillText(
+			"Level Complete",
+			0,
+			0, 
+			"40pt courier",
+			"white");
+		this.fillText(
+			"Click to Continue",
+			0,
+			50, 
+			"32pt courier",
+			"white");
 	},
 	
 	doMousedown: function(e)
-	{
-		var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
-		
-		if(this.testPlayer.active)
-			this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
+	{	
+		switch(this.gameState)
+		{
+			case this.GAME_STATE.MENU:
+				this.gameState = this.GAME_STATE.GAME;
+				break;
+			case this.GAME_STATE.GAME:
+				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
+				
+				if(this.testPlayer.active)
+					this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
+				break;
+			case this.GAME_STATE.RESULT:
+				this.levelNum++;
+				this.loadLevel();
+				this.gameState = this.GAME_STATE.GAME;
+				break;
+		}
 	},
 	
 	killPlayer: function()
