@@ -90,15 +90,18 @@ app.main =
 		switch(this.gameState)
 		{
 			case this.GAME_STATE.MENU:
-				this.updateMenu(dt);
+				if(!this.paused)
+					this.updateMenu(dt);
 				this.drawMenu(dt, this.ctx);
 				break;
 			case this.GAME_STATE.GAME:
-				this.updateGame(dt);
+				if(!this.paused)
+					this.updateGame(dt);
 				this.drawGame(dt, this.ctx);
 				break;
 			case this.GAME_STATE.RESULT:
-				this.updateResult(dt);
+				if(!this.paused)
+					this.updateResult(dt);
 				this.drawResult(dt, this.ctx);
 				break;
 		}
