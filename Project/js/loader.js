@@ -38,8 +38,6 @@ window.onblur = function()
 	
 	cancelAnimationFrame(app.main.animationID);
 	
-	console.log(app.main.animationID);
-	
 	app.main.pauseBGAudio();
 	
 	app.main.update();

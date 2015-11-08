@@ -21,7 +21,6 @@ app.projectiles = (function()
 	var pDSpeedMin = 5;
 	var pDSpeedRange = 30;
 	var pDLength = 20;
-	var pDLifeTime = 3;
 	var pDRadius = 4;
 	var pDColorFill = "rgba(0, 0, 255, .6)";
 	var pDColorStroke = "rgba(170, 170, 255, .4)";
@@ -96,7 +95,7 @@ app.projectiles = (function()
 		}
 	}
 	
-	function spawnPlayerDebris(pos, vel)
+	function spawnPlayerDebris(pos, vel, pDLifeTime)
 	{
 		for(var i = 0; i < playerDebris.length; i++)
 		{

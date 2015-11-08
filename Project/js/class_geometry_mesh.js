@@ -10,6 +10,18 @@ var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius)
 	this.radius = radius;
 }
 
+Mesh.prototype.get = function()
+{
+	return new Mesh(
+		this.pos.xPos,
+		this.pos.yPos,
+		this.colorFill,
+		this.colorStroke,
+		this.thickness,
+		this.edgeCount,
+		this.radius);
+}
+
 //Generate mesh
 Mesh.prototype.generate = function()
 {

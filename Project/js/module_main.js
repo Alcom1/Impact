@@ -44,6 +44,9 @@ app.main =
 	sound : undefined,
 	
 	testPlayer : undefined,
+	isPlayerDead : false,
+	lifeSpan : 2.0,
+	lifeSpanCounter : 0,
 	
     // methods
 	init : function()
@@ -71,9 +74,6 @@ app.main =
 			"#AAF",
 			3);
 		
-		//Load the first level
-		this.loadLevel();
-		
 		// start the game loop
 		this.update();
 	},
@@ -85,7 +85,7 @@ app.main =
 	 	
 	 	//Calculate Delta Time of frame
 	 	var dt = this.calculateDeltaTime();
-	 	 
+		
 	 	//UPDATE-DRAW
 		switch(this.gameState)
 		{
@@ -105,7 +105,7 @@ app.main =
 				this.drawResult(dt, this.ctx);
 				break;
 		}
-	
+
 		//Draw HUD
 		if(this.paused)
 		{
@@ -208,6 +208,18 @@ app.main =
 		}
 		this.testPlayer.limitSpeed();
 		this.testPlayer.move();
+		
+		if(this.isPlayerDead)
+		{
+			this.lifeSpanCounter -= dt;
+			if(this.lifeSpanCounter < 0)
+			{
+				this.lifeSpanCounter = 0;
+				this.isPlayerDead = false;
+				this.loadLevel();
+				this.testPlayer.unKill();
+			}
+		}
 	},
 	
 	drawGame : function(dt, ctx)
@@ -268,6 +280,7 @@ app.main =
 			case this.GAME_STATE.MENU:
 				this.gameState = this.GAME_STATE.GAME;
 				this.sound.playBGAudio();
+				this.loadLevel();
 				break;
 			case this.GAME_STATE.GAME:
 				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
@@ -282,8 +295,8 @@ app.main =
 				break;
 			case this.GAME_STATE.RESULT:
 				this.levelNum++;
-				this.loadLevel();
 				this.gameState = this.GAME_STATE.GAME;
+				this.loadLevel();
 				break;
 		}
 	},
@@ -293,7 +306,10 @@ app.main =
 		this.testPlayer.kill();
 		this.projectiles.spawnPlayerDebris(
 			this.testPlayer.pos,
-			this.testPlayer.vel);
+			this.testPlayer.vel,
+			this.lifeSpan);
+		this.isPlayerDead = true;
+		this.lifeSpanCounter = this.lifeSpan;
 	},
 	
 	checkVictory : function()
@@ -392,20 +408,29 @@ app.main =
 	
 	loadLevel : function()
 	{
-		this.meshes = this.levels.getMeshes(this.levelNum);
-		this.turrets = this.levels.getTurrets(this.levelNum);
-		
-		//Level objects
-		for(var i = 0; i < this.meshes.length; i++)
+		if(this.levels.check(this.levelNum))
 		{
-			this.meshes[i].generate();
+			this.meshes = this.levels.getMeshes(this.levelNum);
+			this.turrets = this.levels.getTurrets(this.levelNum);
+			
+			//Level objects
+			for(var i = 0; i < this.meshes.length; i++)
+			{
+				this.meshes[i].generate();
+			}
+			
+			//Player start
+			this.testPlayer.pos = this.levels.getStart(this.levelNum);
+			this.testPlayer.vel = new Vect(0, 0, 0);
+			
+			//Kill projectiles
+			this.projectiles.reset();
 		}
-		
-		//Player start
-		this.testPlayer.pos = this.levels.getStart(this.levelNum);
-		this.testPlayer.vel = new Vect(0, 0, 0);
-		
-		//Kill projectiles
-		this.projectiles.reset();
+		else
+		{
+			this.gameState = this.GAME_STATE.MENU;
+			this.levelNum = 0;
+			this.sound.stopBGAudio();
+		}
 	}
 }; // end app.main

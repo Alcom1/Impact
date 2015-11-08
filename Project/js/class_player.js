@@ -53,3 +53,8 @@ Player.prototype.kill = function()
 {
 	this.active = false;
 }
+
+Player.prototype.unKill = function()
+{
+	this.active = true;
+}

@@ -21,7 +21,7 @@ app.levels = (function()
 			"#999",
 			"#CCC",
 			3,
-			6,
+			8,
 			100));
 		level0.turrets = [];
 		level0.start = new Vect(0, -200, 0);
@@ -45,19 +45,36 @@ app.levels = (function()
 	
 	function getMeshes(index)
 	{
-		var meshes = levels[index].meshes;
-		return meshes;
+		var send = [];
+		for(var i = 0; i < levels[index].meshes.length; i++)
+		{
+			send.push(levels[index].meshes[i].get());
+		}
+		return send;
 	}
 	
 	function getTurrets(index)
 	{
-		var turrets = levels[index].turrets;
-		return turrets;
+		var send = [];
+		for(var i = 0; i < levels[index].turrets.length; i++)
+		{
+			send.push(levels[index].turrets[i].get());
+		}
+		return send;
 	}
 	
 	function getStart(index)
 	{
-		return levels[index].start;
+		return levels[index].start.get();
+	}
+	
+	function check(index)
+	{
+		if(index < levels.length)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	// export a public interface to this module. This needs to be a same-like bracket because a new-line bracket creates a new scope!
@@ -66,5 +83,6 @@ app.levels = (function()
 		getMeshes : getMeshes,
 		getTurrets : getTurrets,
 		getStart : getStart,
+		check : check,
 	}
 }());
