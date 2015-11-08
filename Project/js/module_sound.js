@@ -9,10 +9,6 @@ app.sound = (function()
 {
 	console.log("sound.js module loaded");
 	var bgAudio = undefined;
-	var effectAudio = undefined;
-	var currentEffect = 0;
-	var currentDirection = 1;
-	var effectSounds = ["1.mp3"];
 	var pShootAudio = undefined;
 	var tShootAudio = undefined;
 	
@@ -21,8 +17,6 @@ app.sound = (function()
 	{
 		bgAudio = document.querySelector("#bgAudio");
 		bgAudio.volume=0.25;
-		effectAudio = document.querySelector("#effectAudio");
-		effectAudio.volume = 0.3;
 		
 		pShootAudio = document.querySelector("#pShootAudio");
 		pShootAudio.volume = 0.3;
@@ -41,16 +35,9 @@ app.sound = (function()
 		bgAudio.currentTime = 0;
 	}
 	
-	function playEffect()
+	function pauseBGAudio()
 	{
-		effectAudio.src = "media/" + effectSounds[currentEffect];
-		effectAudio.play();
-		currentEffect += currentDirection;
-		if (currentEffect == effectSounds.length || currentEffect == -1)
-		{
-			currentDirection *= -1;
-			currentEffect += currentDirection;
-		}
+		bgAudio.pause();
 	}
 	
 	function playPShootAudio()
@@ -70,7 +57,7 @@ app.sound = (function()
 		init : init,
 		playBGAudio : playBGAudio,
 		stopBGAudio : stopBGAudio,
-		playEffect : playEffect,
+		pauseBGAudio : pauseBGAudio,
 		playPShootAudio : playPShootAudio,
 		playTShootAudio : playTShootAudio,
 	}

@@ -267,6 +267,7 @@ app.main =
 		{
 			case this.GAME_STATE.MENU:
 				this.gameState = this.GAME_STATE.GAME;
+				this.sound.playBGAudio();
 				break;
 			case this.GAME_STATE.GAME:
 				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
@@ -363,6 +364,17 @@ app.main =
 		this.ctx.fillStyle = color;
 		this.ctx.fillText(string, x, y);
 		this.ctx.restore();
+	},
+	
+	pauseBGAudio : function()
+	{
+		this.sound.pauseBGAudio();
+	},
+	
+	resumeBGAudio : function()
+	{
+		if(this.gameState != this.GAME_STATE.MENU)
+			this.sound.playBGAudio();
 	},
 	
 	calculateDeltaTime : function()

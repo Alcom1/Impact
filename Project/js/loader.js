@@ -40,6 +40,8 @@ window.onblur = function()
 	
 	console.log(app.main.animationID);
 	
+	app.main.pauseBGAudio();
+	
 	app.main.update();
 }
 
@@ -50,6 +52,8 @@ window.onfocus = function()
 	cancelAnimationFrame(app.main.animationID);
 	
 	app.main.paused = false;
+	
+	app.main.resumeBGAudio();
 	
 	app.main.update();
 }
