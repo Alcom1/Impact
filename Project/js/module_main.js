@@ -126,7 +126,7 @@ app.main =
 	drawMenu : function(dt, ctx)
 	{
 		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
-		this.drawBackground();
+		this.drawBackground(false);
 		
 		//Text
 		ctx.textAlign = "center";
@@ -210,7 +210,7 @@ app.main =
 	drawGame : function(dt, ctx)
 	{
 		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
-		this.drawBackground();
+		this.drawBackground(false);
 		for(var i = 0; i < this.meshes.length; i++)
 		{		
 			this.meshes[i].draw(this.ctx);
@@ -239,10 +239,7 @@ app.main =
 		ctx.putImageData(this.saveImage, -this.WIDTH / 2, -this.HEIGHT / 2);
 		
 		//Blackout
-		ctx.save();
-		ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-		ctx.fillRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
-		ctx.restore();
+		this.drawBackground(true);
 		
 		//Text
 		ctx.textAlign = "center";
@@ -308,18 +305,11 @@ app.main =
 		return true;
 	},
 	
-	drawBackground : function()
+	drawBackground : function(useTrans)
 	{
 		this.ctx.save();
 		
 		var lineWidth = 3;
-		
-		//Border
-		this.ctx.beginPath();
-		this.ctx.rect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
-		this.ctx.fillStyle = "#F5F5F5";
-		this.ctx.fill();
-		this.ctx.restore();
 		
 		//Black space
 		this.ctx.beginPath();
@@ -329,19 +319,28 @@ app.main =
 			this.HEIGHT / 2 - lineWidth / 2,
 			0,
 			Math.PI * 2);
-		this.ctx.fillStyle = "#000";
-		this.ctx.strokeStyle = "#CCC";
+		if(useTrans)
+		{
+			this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+			this.ctx.strokeStyle = "rgba(0, 0, 0, 0.0)";
+		}
+		else
+		{
+			this.ctx.fillStyle = "#000";
+			this.ctx.strokeStyle = "#CCC";
+		}
 		this.ctx.lineWidth = 3;
 		this.ctx.fill();
 		this.ctx.stroke();
+		this.ctx.restore();
 	},
 	
 	drawPauseScreen : function(ctx)
 	{
 		ctx.save();
+		this.drawBackground(false);
+		
 		ctx.translate(-this.WIDTH / 2, -this.HEIGHT / 2);
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 		this.fillText(
