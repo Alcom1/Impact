@@ -2,53 +2,73 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<title>Impact</title>
+		<link rel="stylesheet" type="text/css" href="../css/main.css"/>
 		<style>
-			body
-			{
-				 background: #AACCFF;
-			}
-			
 			canvas
 			{
 				display: block;
 				margin-left: auto;
 				margin-right: auto;
-				margin-top: 80px;
+				margin-top: 20px;
+				margin-bottom: 20px;
 				background: black;
-				border:1px solid gray;
 			}
 			
 			#audioControls
 			{
 				display: none;
 			}
+			
+			p
+			{
+				margin-left: 15px;
+			}
+			
+			h3
+			{
+				margin-left: 15px;
+			}
 		</style>
-		<title>Impact</title>
 	</head>
 	<body>
-		<canvas>
-			Get a real browser!
-		</canvas>
-		<!-- Classes -->
-		<script src='js/class_vect.js'></script>
-		<script src='js/class_shape.js'></script>
-		<script src='js/class_geometry_mesh.js'></script>
-		<script src='js/class_projectile.js'></script>
-		<script src='js/class_player.js'></script>
-		
-		<!-- Tools -->
-		<script src='js/utilities.js'></script>
-		<script src='js/loader.js'></script>
-		<script src='js/keys.js'></script>
-		
-		<!-- Modules -->
-		<script src='js/module_projectiles.js'></script>
-		<script src='js/module_levels.js'></script>
-		<script src='js/module_sound.js'></script>
-		<script src='js/module_main.js'></script>
-		<section id="audioControls">
-			<audio id="bgAudio" src="media/background.mp3" controls loop></audio>
-			<audio id="effectAudio" controls></audio>
-		</section>
+		<div id="border_super">
+			<div id="border">
+				<div class="content">
+					<canvas>
+						Get a real browser!
+					</canvas>
+					<!-- Classes -->
+					<script src='js/class_vect.js'></script>
+					<script src='js/class_shape.js'></script>
+					<script src='js/class_geometry_mesh.js'></script>
+					<script src='js/class_projectile.js'></script>
+					<script src='js/class_player.js'></script>
+					
+					<!-- Tools -->
+					<script src='js/utilities.js'></script>
+					<script src='js/loader.js'></script>
+					<script src='js/keys.js'></script>
+					
+					<!-- Modules -->
+					<script src='js/module_projectiles.js'></script>
+					<script src='js/module_levels.js'></script>
+					<script src='js/module_sound.js'></script>
+					<script src='js/module_main.js'></script>
+					<section id="audioControls">
+						<audio id="bgAudio" src="media/background.mp3" controls loop></audio>
+						<audio id="effectAudio" controls></audio>
+						<audio id="pShootAudio" src="media/db1.ogg" controls></audio>
+						<audio id="tShootAudio" src="media/tt1.mp3" controls></audio>
+					</section>
+					<hr>
+					<h3><u>Controls</u></h3>
+					<p>Move: WASD</p>
+					<p>Shoot: Left Mouse Button</p>
+					<p>Aim: Point your cursor where you wish to fire.</p>
+					<hr>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

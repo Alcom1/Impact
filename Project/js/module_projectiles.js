@@ -63,10 +63,12 @@ app.projectiles = (function()
 					0))
 				{
 					pPFireRateCounter = pPFireRate;
-					break;
+					return true;
 				}
 			}
 		}
+		
+		return false;
 	}
 	
 	function drawPlayerProjectiles(ctx)

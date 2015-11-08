@@ -12,7 +12,9 @@ app.sound = (function()
 	var effectAudio = undefined;
 	var currentEffect = 0;
 	var currentDirection = 1;
-	var effectSounds = ["1.mp3","2.mp3","3.mp3","4.mp3","5.mp3","6.mp3","7.mp3","8.mp3"];
+	var effectSounds = ["1.mp3"];
+	var pShootAudio = undefined;
+	var tShootAudio = undefined;
 	
 
 	function init()
@@ -21,6 +23,11 @@ app.sound = (function()
 		bgAudio.volume=0.25;
 		effectAudio = document.querySelector("#effectAudio");
 		effectAudio.volume = 0.3;
+		
+		pShootAudio = document.querySelector("#pShootAudio");
+		pShootAudio.volume = 0.3;
+		tShootAudio = document.querySelector("#tShootAudio");
+		tShootAudio.volume = 0.3;
 	}
 	
 	function playBGAudio()
@@ -46,11 +53,25 @@ app.sound = (function()
 		}
 	}
 	
+	function playPShootAudio()
+	{
+		pShootAudio.pause();
+		pShootAudio.currentTime = 0;
+		pShootAudio.play();
+	}
+	
+	function playTShootAudio()
+	{
+		tShootAudio.play();
+	}
+	
 	// export a public interface to this module (Why does this need to be same line bracket?)
 	return{
 		init : init,
 		playBGAudio : playBGAudio,
 		stopBGAudio : stopBGAudio,
-		playEffect : playEffect
+		playEffect : playEffect,
+		playPShootAudio : playPShootAudio,
+		playTShootAudio : playTShootAudio,
 	}
 }());

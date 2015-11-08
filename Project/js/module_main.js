@@ -41,6 +41,8 @@ app.main =
 	paused : false,
 	animationID : 0,
 	
+	sound : undefined,
+	
 	testPlayer : undefined,
 	
     // methods
@@ -112,7 +114,7 @@ app.main =
 		if (this.debug)
 		{
 			// draw dt in bottom right corner
-			this.fillText("dt: " + dt.toFixed(3), 100, 230, "18pt courier", "white");
+			this.fillText("dt: " + dt.toFixed(3), 170, 230, "18pt courier", "black");
 		}
 	},
 	
@@ -270,7 +272,12 @@ app.main =
 				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
 				
 				if(this.testPlayer.active)
-					this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse);
+				{
+					if(this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse))
+					{
+						this.sound.playPShootAudio();
+					}
+				}
 				break;
 			case this.GAME_STATE.RESULT:
 				this.levelNum++;
@@ -310,7 +317,7 @@ app.main =
 		//Border
 		this.ctx.beginPath();
 		this.ctx.rect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
-		this.ctx.fillStyle = "#999";
+		this.ctx.fillStyle = "#F5F5F5";
 		this.ctx.fill();
 		this.ctx.restore();
 		
