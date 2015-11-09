@@ -5,7 +5,6 @@
 // returns mouse position in local coordinate system of element
 function getMouse(e, xOff, yOff)
 {
-	console.log(e);
 	var mouse = new Vect(
 		e.pageX - e.target.offsetLeft - xOff,
 		e.pageY - e.target.offsetTop - yOff,

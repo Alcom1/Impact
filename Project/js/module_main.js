@@ -22,7 +22,7 @@ app.main =
     canvas : undefined,			// Canvas
     ctx : undefined,			// Canvas context
    	lastTime : 0, 				// used by calculateDeltaTime() 
-    debug : true,				// debug
+    debug : false,				// debug
 	gameState : undefined,		// Game state
 	saveImage : undefined,		// Saved image from canvas to be used in results screen.
 	mouseDown : false,			// If mouse is down.
@@ -165,8 +165,6 @@ app.main =
 	updateGame : function(dt)
 	{
 		//Projectile firing
-		console.log(this.mouseDown);
-		
 		if(this.mouseDown)
 		{
 			//Shoot and play firing noises.
@@ -360,7 +358,6 @@ app.main =
 	doMousemove : function(e)
 	{
 		this.mousePos = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
-		console.log(this.mousePos);
 	},
 	
 	//Kill the player.
