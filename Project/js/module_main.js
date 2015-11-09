@@ -231,18 +231,22 @@ app.main =
 		//Key inputs.
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])	//Accel north
 		{
+			//console.log("MOVE NORTH");
 			this.testPlayer.vel.yPos -= 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_D])	//Accel east
 		{
+			//console.log("MOVE EAST");
 			this.testPlayer.vel.xPos += 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_S])	//Accel south
 		{
+			//console.log("MOVE SOUTH");
 			this.testPlayer.vel.yPos += 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_A])	//Accel west
 		{
+			//console.log("MOVE WEST");
 			this.testPlayer.vel.xPos -= 8 * dt;
 		}
 		

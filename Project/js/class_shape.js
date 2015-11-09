@@ -1,7 +1,7 @@
 //Constructor
 var Shape = function()
 {
-	this.vertices = [];
+	this.vertices = [];	//Array of verticies that form the shape
 }
 
 //Get number of vertices
@@ -72,15 +72,15 @@ Shape.prototype.getMidPoint = function(index)
 	return this.getVertex(index).getAdd(this.getVertex((index + 1) % this.getVertexCount())).getDiv(2);
 }
 
-//Generate the shape as a regular polygon
-Shape.prototype.generatePolygon = function(edgeCount, radius)
+//Generate the shape as a scaled regular polygon
+Shape.prototype.generatePolygon = function(edgeCount, radius, scale)
 {
 	this.vertices = [];
 	for(var i = 0; i < edgeCount; i++)
 	{
 		this.add(
 			Math.sin(2 * i * Math.PI / edgeCount) * radius,
-			Math.cos(2 * i * Math.PI / edgeCount) * radius);
+			Math.cos(2 * i * Math.PI / edgeCount) * radius * scale);	//Y-axis is scaled
 	}
 }
 

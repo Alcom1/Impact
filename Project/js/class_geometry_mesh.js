@@ -1,13 +1,14 @@
 //Constructor
-var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius)
+var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius, scale)
 {
-	this.shape = new Shape();
-	this.pos = new Vect(x, y, 0);
-	this.colorFill = colorFill;
-	this.colorStroke = colorStroke;
-	this.thickness = thickness;
-	this.edgeCount = edgeCount;
-	this.radius = radius;
+	this.shape = new Shape();		//Shape of the mesh
+	this.pos = new Vect(x, y, 0);	//Position of the mesh
+	this.colorFill = colorFill;		//Color of the mesh
+	this.colorStroke = colorStroke;	//Stroke color of the mesh
+	this.thickness = thickness;		//Thickness of the mesh
+	this.edgeCount = edgeCount;		//Number of edges on mesh.
+	this.radius = radius;			//Radius of mesh.
+	this.scale = scale;				//Y-scale of mesh.
 }
 
 //Returns a copy of this mesh.
@@ -20,13 +21,14 @@ Mesh.prototype.get = function()
 		this.colorStroke,
 		this.thickness,
 		this.edgeCount,
-		this.radius);
+		this.radius,
+		this.scale);
 }
 
-//Generate mesh
+//Generate regular polygon mesh
 Mesh.prototype.generate = function()
 {
-	this.shape.generatePolygon(this.edgeCount, this.radius);
+	this.shape.generatePolygon(this.edgeCount, this.radius, this.scale);
 	this.threshold = this.shape.getAverageEdgeLength() * 1.4;
 	this.shape.getArea();
 }

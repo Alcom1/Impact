@@ -39,18 +39,4 @@ window.addEventListener("keyup",function(e)
 {
 	//console.log("keyup=" + e.keyCode);
 	myKeys.keydown[e.keyCode] = false;
-	
-	// pausing and resuming
-	var char = String.fromCharCode(e.keyCode);
-	if (char == "p" || char == "P")
-	{
-		if (app.main.paused)
-		{
-			app.main.resumeGame();
-		}
-		else
-		{
-			app.main.pauseGame();
-		}
-	}
 });
