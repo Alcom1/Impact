@@ -8,8 +8,8 @@ var app = app || {};
 app.projectiles = (function()
 {
 	var playerProjectiles = [];						//Array of player shooty projectiles.
-	var pPSpeed = 300.0;							//Speed of player projectiles.
-	var pPFireRate = .1;							//Firing rate of player projectiles.
+	var pPSpeed = 320.0;							//Speed of player projectiles.
+	var pPFireRate = .18;							//Firing rate of player projectiles.
 	var pPFireRateCounter = 0;						//Counter for firing rate
 	var pPLifeTime = 2.0;							//Lifetime
 	var pPRadius = 3;								//Radius

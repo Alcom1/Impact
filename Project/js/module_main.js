@@ -25,6 +25,8 @@ app.main =
     debug : true,				// debug
 	gameState : undefined,		// Game state
 	saveImage : undefined,		// Saved image from canvas to be used in results screen.
+	mouseDown : false,			// If mouse is down.
+	mousePos : undefined,		// Mouse position
 	
 	//Game state enum
 	GAME_STATE: Object.freeze
@@ -63,6 +65,11 @@ app.main =
 		
 		//Hook up mouse events
 		this.canvas.onmousedown = this.doMousedown.bind(this);
+		this.canvas.onmouseup = this.doMouseup.bind(this);
+		this.canvas.onmousemove = this.doMousemove.bind(this);
+		
+		//Mouse position
+		this.mousePos = new Vect(0, 0, 0);
 		
 		//Game State
 		this.gameState = this.GAME_STATE.MENU;
@@ -127,7 +134,7 @@ app.main =
 	//Update menu state
 	updateMenu : function(dt)
 	{
-		
+
 	},
 	
 	//Draw menu state
@@ -157,6 +164,21 @@ app.main =
 	//Update game state
 	updateGame : function(dt)
 	{
+		//Projectile firing
+		console.log(this.mouseDown);
+		
+		if(this.mouseDown)
+		{
+			//Shoot and play firing noises.
+			if(this.testPlayer.active)
+			{
+				if(this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, this.mousePos))
+				{
+					this.sound.playPShootAudio();
+				}
+			}
+		}
+		
 		this.projectiles.movePlayerProjectiles(dt);							//Move player projectiles.
 		this.projectiles.movePlayerDebris(dt);								//Move player debris.
 		this.projectiles.tickPlayerFireRate(dt);							//Decrement player debris life.
@@ -299,7 +321,7 @@ app.main =
 			"white");
 	},
 	
-	//Mouse actions.
+	//Mouse down actions.
 	doMousedown: function(e)
 	{	
 		switch(this.gameState)
@@ -313,17 +335,6 @@ app.main =
 				
 			//Game
 			case this.GAME_STATE.GAME:
-				//Get mouse position, a vector.
-				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
-				
-				//Shoot and play firing noises.
-				if(this.testPlayer.active)
-				{
-					if(this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse))
-					{
-						this.sound.playPShootAudio();
-					}
-				}
 				break;
 			
 			//Results
@@ -333,6 +344,23 @@ app.main =
 				this.loadLevel();						//Load next level
 				break;
 		}
+		
+		//Increment mouseDown to 1 (true)
+		this.mouseDown = true;
+	},
+	
+	//Mouse up actions
+	doMouseup: function(e)
+	{	
+		//Decrement mouseDown to 0 (false)
+		this.mouseDown = false;
+	},
+	
+	//Mouse move tracking
+	doMousemove : function(e)
+	{
+		this.mousePos = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
+		console.log(this.mousePos);
 	},
 	
 	//Kill the player.
