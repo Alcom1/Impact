@@ -17,16 +17,16 @@ var app = app || {};
  */
 app.main =
 {
-	//  properties
-    WIDTH : 480, 
-    HEIGHT : 480,
-    canvas : undefined,
-    ctx : undefined,
-   	lastTime : 0, // used by calculateDeltaTime() 
-    debug : true,
-	gameState : undefined,
-	saveImage : undefined,
+    WIDTH : 480, 				// Canvas width
+    HEIGHT : 480,				// Canvas height
+    canvas : undefined,			// Canvas
+    ctx : undefined,			// Canvas context
+   	lastTime : 0, 				// used by calculateDeltaTime() 
+    debug : true,				// debug
+	gameState : undefined,		// Game state
+	saveImage : undefined,		// Saved image from canvas to be used in results screen.
 	
+	//Game state enum
 	GAME_STATE: Object.freeze
 	({
 		MENU : 0,
@@ -34,25 +34,27 @@ app.main =
 		RESULT : 2,
 	}),
 	
-	levelNum: 0,
-	meshes: undefined,
-	turrets: undefined,
+	levelNum: 0,			//Index of current level.
+	meshes: undefined,		//Meshes for level
+	turrets: undefined,		//Turrets for level
 	
-	paused : false,
-	animationID : 0,
+	paused : false,			//True if currently paused
+	animationID : 0,		//ID index of the current frame.
 	
-	sound : undefined,
+	sound : undefined,		//Sound
 	
-	testPlayer : undefined,
-	isPlayerDead : false,
-	lifeSpan : 2.0,
-	lifeSpanCounter : 0,
+	testPlayer : undefined,	//Player object.
+	isPlayerDead : false,	//False if player is dead.
+	deathSpan : 2.0,		//Duration that player is dead.
+	deathSpanCounter : 0,	//Counter for tracking player death duration.
 	
-    // methods
+    //Initialization
 	init : function()
 	{
+		//Init log
 		console.log("app.main.init() called");
-		// initialize properties
+		
+		// init canvas
 		this.canvas = document.querySelector('canvas');
 		this.canvas.width = this.WIDTH;
 		this.canvas.height = this.HEIGHT;
@@ -78,6 +80,7 @@ app.main =
 		this.update();
 	},
 	
+	//Core update
 	update : function()
 	{
 		//LOOP
@@ -121,13 +124,16 @@ app.main =
 		}
 	},
 	
+	//Update menu state
 	updateMenu : function(dt)
 	{
 		
 	},
 	
+	//Draw menu state
 	drawMenu : function(dt, ctx)
 	{
+		//Draw background
 		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground(false);
 		
@@ -148,26 +154,36 @@ app.main =
 			"white");
 	},
 	
+	//Update game state
 	updateGame : function(dt)
 	{
-		this.projectiles.movePlayerProjectiles(dt);
-		this.projectiles.movePlayerDebris(dt);
-		this.projectiles.tickPlayerFireRate(dt);
-		var playerProjectiles = this.projectiles.getPlayerProjectiles();
+		this.projectiles.movePlayerProjectiles(dt);							//Move player projectiles.
+		this.projectiles.movePlayerDebris(dt);								//Move player debris.
+		this.projectiles.tickPlayerFireRate(dt);							//Decrement player debris life.
+		
+		var playerProjectiles = this.projectiles.getPlayerProjectiles();	//Get player projectiles list.
+		
+		//For each player projectile.
 		for(var i = 0; i < playerProjectiles.length; i++)
 		{
+			//If projectile is active
 			if(playerProjectiles[i].getActive())
 			{
+				//If projectile is beyond border, kill it.
 				if(playerProjectiles[i].pos.magnitude() > this.HEIGHT / 2)
 				{
 					playerProjectiles[i].kill();
 				}
 				
+				//For each mesh in level.
 				for(var j = 0; j < this.meshes.length; j++)
 				{
+					//If mesh collapsed based on projectile position. (If damage from projectile occured)
 					if(this.meshes[j].collapse(this.meshes[j].checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
 					{
-						playerProjectiles[i].kill();
+						playerProjectiles[i].kill();	//Kill the projectile.
+						
+						//If victory for level, change state to result.
 						if(this.checkVictory())
 						{
 							this.gameState = this.GAME_STATE.RESULT;
@@ -177,6 +193,13 @@ app.main =
 			}
 		}
 		
+		//If player is beyond boundary, kill the player.
+		if(this.testPlayer.active && this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
+		{
+			this.killPlayer();
+		}
+		
+		//Player collision. If player is active and collides with mesh, kill the player.
 		for(var i = 0; i < this.meshes.length; i++)
 		{		
 			if(this.testPlayer.active && this.meshes[i].checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
@@ -185,36 +208,35 @@ app.main =
 			}
 		}
 		
-		if(this.testPlayer.active && this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
-		{
-			this.killPlayer();
-		}
-		
-		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])
+		//Key inputs.
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])	//Accel north
 		{
 			this.testPlayer.vel.yPos -= 8 * dt;
 		}
-		if(myKeys.keydown[myKeys.KEYBOARD.KEY_D])
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_D])	//Accel east
 		{
 			this.testPlayer.vel.xPos += 8 * dt;
 		}
-		if(myKeys.keydown[myKeys.KEYBOARD.KEY_S])
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_S])	//Accel south
 		{
 			this.testPlayer.vel.yPos += 8 * dt;
 		}
-		if(myKeys.keydown[myKeys.KEYBOARD.KEY_A])
+		if(myKeys.keydown[myKeys.KEYBOARD.KEY_A])	//Accel west
 		{
 			this.testPlayer.vel.xPos -= 8 * dt;
 		}
+		
+		//Limit speed and move player
 		this.testPlayer.limitSpeed();
 		this.testPlayer.move();
 		
+		//If player is dead, decrement death span.
 		if(this.isPlayerDead)
 		{
-			this.lifeSpanCounter -= dt;
-			if(this.lifeSpanCounter < 0)
+			this.deathSpanCounter -= dt;
+			if(this.deathSpanCounter < 0)
 			{
-				this.lifeSpanCounter = 0;
+				this.deathSpanCounter = 0;
 				this.isPlayerDead = false;
 				this.loadLevel();
 				this.testPlayer.unKill();
@@ -222,8 +244,10 @@ app.main =
 		}
 	},
 	
+	//Draw game state
 	drawGame : function(dt, ctx)
 	{
+		//Draw the game
 		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
 		this.drawBackground(false);
 		for(var i = 0; i < this.meshes.length; i++)
@@ -241,11 +265,13 @@ app.main =
 		}
 	},
 	
+	//Update result state
 	updateResult : function(dt)
 	{
 		
 	},
 	
+	//Draw result state
 	drawResult : function(dt, ctx)
 	{
 		ctx.clearRect(-this.WIDTH / 2, -this.HEIGHT / 2, this.WIDTH, this.HEIGHT);
@@ -273,18 +299,24 @@ app.main =
 			"white");
 	},
 	
+	//Mouse actions.
 	doMousedown: function(e)
 	{	
 		switch(this.gameState)
 		{
+			//Menu
 			case this.GAME_STATE.MENU:
-				this.gameState = this.GAME_STATE.GAME;
-				this.sound.playBGAudio();
-				this.loadLevel();
+				this.gameState = this.GAME_STATE.GAME;	//Proceed to game
+				this.sound.playBGAudio();				//Start bg music
+				this.loadLevel();						//Load first level
 				break;
+				
+			//Game
 			case this.GAME_STATE.GAME:
+				//Get mouse position, a vector.
 				var mouse = getMouse(e, this.WIDTH / 2, this.HEIGHT / 2);
 				
+				//Shoot and play firing noises.
 				if(this.testPlayer.active)
 				{
 					if(this.projectiles.spawnPlayerProjectile(this.testPlayer.pos, mouse))
@@ -293,27 +325,32 @@ app.main =
 					}
 				}
 				break;
+			
+			//Results
 			case this.GAME_STATE.RESULT:
-				this.levelNum++;
-				this.gameState = this.GAME_STATE.GAME;
-				this.loadLevel();
+				this.levelNum++;						//Increment level
+				this.gameState = this.GAME_STATE.GAME;	//Continue to game
+				this.loadLevel();						//Load next level
 				break;
 		}
 	},
 	
+	//Kill the player.
 	killPlayer: function()
 	{
-		this.testPlayer.kill();
-		this.projectiles.spawnPlayerDebris(
+		this.testPlayer.kill();					//Kill player
+		this.projectiles.spawnPlayerDebris(		//Spawn debris with player position and velocity
 			this.testPlayer.pos,
 			this.testPlayer.vel,
-			this.lifeSpan);
-		this.isPlayerDead = true;
-		this.lifeSpanCounter = this.lifeSpan;
+			this.deathSpan);
+		this.isPlayerDead = true;				//Player is dead
+		this.deathSpanCounter = this.deathSpan;	//Set counter for counting
 	},
 	
+	//Check if victorious in level.
 	checkVictory : function()
 	{
+		//If any meshes aren't dead, return false.
 		for(var i = 0; i < this.meshes.length; i++)
 		{
 			if(!this.meshes[i].getDead())
@@ -321,10 +358,12 @@ app.main =
 				return false;
 			}
 		}
-				
+		
+		//Return true.
 		return true;
 	},
 	
+	//Draw background circle.
 	drawBackground : function(useTrans)
 	{
 		this.ctx.save();
@@ -339,6 +378,8 @@ app.main =
 			this.HEIGHT / 2 - lineWidth / 2,
 			0,
 			Math.PI * 2);
+		
+		//Transparent condition for results screen overlay.
 		if(useTrans)
 		{
 			this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
@@ -355,6 +396,7 @@ app.main =
 		this.ctx.restore();
 	},
 	
+	//Draw pause screen
 	drawPauseScreen : function(ctx)
 	{
 		ctx.save();
@@ -372,6 +414,7 @@ app.main =
 		ctx.restore()
 	},
 	
+	//Draw filled text
 	fillText : function(string, x, y, css, color)
 	{
 		this.ctx.save();
@@ -382,17 +425,20 @@ app.main =
 		this.ctx.restore();
 	},
 	
+	//Pause background music
 	pauseBGAudio : function()
 	{
 		this.sound.pauseBGAudio();
 	},
 	
+	//Resume background music
 	resumeBGAudio : function()
 	{
 		if(this.gameState != this.GAME_STATE.MENU)
 			this.sound.playBGAudio();
 	},
 	
+	//Calculate delta-time
 	calculateDeltaTime : function()
 	{
 		// what's with (+ new Date) below?
@@ -406,31 +452,33 @@ app.main =
 		return 1/fps;
 	},
 	
+	//Load the level at the cirrent level index.
 	loadLevel : function()
 	{
+		//If level index is valid
 		if(this.levels.check(this.levelNum))
 		{
-			this.meshes = this.levels.getMeshes(this.levelNum);
-			this.turrets = this.levels.getTurrets(this.levelNum);
+			this.meshes = this.levels.getMeshes(this.levelNum);		//Load meshes
+			this.turrets = this.levels.getTurrets(this.levelNum);	//Load turrets
 			
-			//Level objects
+			//Generate new meshes
 			for(var i = 0; i < this.meshes.length; i++)
 			{
 				this.meshes[i].generate();
 			}
 			
 			//Player start
-			this.testPlayer.pos = this.levels.getStart(this.levelNum);
-			this.testPlayer.vel = new Vect(0, 0, 0);
+			this.testPlayer.pos = this.levels.getStart(this.levelNum);	//Reset position.
+			this.testPlayer.vel = new Vect(0, 0, 0);					//Reset velocity.
 			
 			//Kill projectiles
 			this.projectiles.reset();
 		}
 		else
 		{
-			this.gameState = this.GAME_STATE.MENU;
-			this.levelNum = 0;
-			this.sound.stopBGAudio();
+			this.gameState = this.GAME_STATE.MENU;	//Reset to menu
+			this.levelNum = 0;						//Reset level number
+			this.sound.stopBGAudio();				//Stop background music
 		}
 	}
 }; // end app.main

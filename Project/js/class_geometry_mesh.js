@@ -10,6 +10,7 @@ var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius)
 	this.radius = radius;
 }
 
+//Returns a copy of this mesh.
 Mesh.prototype.get = function()
 {
 	return new Mesh(
@@ -69,6 +70,8 @@ Mesh.prototype.checkCollision = function(gx, gy)
 			return i;	//Return index representing collided triangle.
 		}
 	}
+	
+	//Return -1 if no collision occured.
 	return -1;
 }
 
@@ -93,9 +96,9 @@ Mesh.prototype.collapse = function(index)
 	
 	//Collapse, recalculate area after collapsing, recalculate center to be at center of mesh, and return true.
 	this.shape.collapse(index);
+	this.shape.crater(this.threshold);
 	this.shape.getArea();
 	this.recalcCenter();
-	this.shape.crater(this.threshold);
 	return true;
 }
 
@@ -118,6 +121,7 @@ Mesh.prototype.recalcCenter = function()
 	this.shape.offsetAway(offset);
 }
 
+//Returns true if the mesh is dead and the area is 0.
 Mesh.prototype.getDead = function()
 {
 	if(this.shape.getArea() == 0)

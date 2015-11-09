@@ -20,17 +20,20 @@ Projectile.prototype.getActive = function()
 //Spawns this projectile with a given position, destination, and lifeTime.
 Projectile.prototype.spawn = function(pos, des, lifeTime, radius, colorFill, colorStroke, thickness, choice)
 {
+	//Spawn only if not currently active.
 	if(!this.active)
 	{
-		var randomNormVect = new Vect(Math.random() * Math.PI * 2, 1, 1);
 		this.active = true;
 		switch(choice)
 		{
+			// ==FOR SHOOTY PROJECTILES== Spawn a projectile that moves towards a destination.
 			case 0:
 				this.pos = pos;
 				this.vel = des.getSub(pos).getNorm().getMult(this.speed);
 				break;
-			case 1:
+			// ==FOR DEBRIS PROJECTILES== Spawn a projectile that moves in the sum of a random direction and the direction of des.
+			case 1:				
+				var randomNormVect = new Vect(Math.random() * Math.PI * 2, 1, 1);
 				this.pos = pos.getAdd(randomNormVect.getMult(5));
 				this.vel = des.getMult(10).getAdd(randomNormVect.getMult(this.speed, 1));
 				break;
@@ -40,9 +43,10 @@ Projectile.prototype.spawn = function(pos, des, lifeTime, radius, colorFill, col
 		this.colorFill = colorFill;
 		this.colorStroke = colorStroke;
 		this.thickness = thickness;
-		return true;
+		return true;	//Return true if spawn successful.
 	}
-	return false;
+	
+	return false;	//Return false if spawn failed.
 }
 
 //Draw this projectile

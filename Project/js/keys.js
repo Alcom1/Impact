@@ -7,10 +7,13 @@ var myKeys = {};
 
 myKeys.KEYBOARD = Object.freeze
 ({
+	//WASD Input
 	"KEY_W": 87,
 	"KEY_D": 68,
 	"KEY_S": 83,
 	"KEY_A": 65,
+	
+	//Other (unused?) Input
 	"KEY_LEFT": 37, 
 	"KEY_UP": 38, 
 	"KEY_RIGHT": 39, 

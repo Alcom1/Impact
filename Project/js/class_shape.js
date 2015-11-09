@@ -108,14 +108,15 @@ Shape.prototype.collapse = function(index)
 	this.remove((index + 1) % this.getVertexCount());
 }
 
+//Takes any edge that is beyond a threshold length, splits it, and indents it.
 Shape.prototype.crater = function(threshold)
 {
 	for(var i = 0; i < this.getVertexCount(); i++)
 	{
-		if(this.getEdgeLength(i) > threshold)
+		if(this.getEdgeLength(i) > threshold)		//If beyond threshold
 		{
-			this.insert(i + 1, this.getMidPoint(i))
-			this.getVertex(i + 1).div(1.1);
+			this.insert(i + 1, this.getMidPoint(i))	//Split
+			this.getVertex(i + 1).div(1.1);			//Indent
 		}
 	}
 }

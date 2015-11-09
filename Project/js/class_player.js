@@ -7,7 +7,7 @@ var Player = function(x, y, maxSpeed, colorFill, colorStroke, thickness)
 	this.colorFill = colorFill;
 	this.colorStroke = colorStroke;
 	this.thickness = thickness;
-	this.active = true;
+	this.active = true;				//Drawing and moving occurs while player is active.
 }
 
 //Draw player
@@ -41,6 +41,7 @@ Player.prototype.move = function()
 	}
 }
 
+//Limits the velocity magnitude to the maxSpeed of the player.
 Player.prototype.limitSpeed = function()
 {
 	if(this.vel.magnitude() > this.maxSpeed)
@@ -49,11 +50,13 @@ Player.prototype.limitSpeed = function()
 	}
 }
 
+//Kills the player.
 Player.prototype.kill = function()
 {
 	this.active = false;
 }
 
+//Reactivates the player.
 Player.prototype.unKill = function()
 {
 	this.active = true;

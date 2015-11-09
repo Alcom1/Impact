@@ -7,44 +7,49 @@ var app = app || {};
 // define the .projectiles module and immediately invoke it in an IIFE
 app.projectiles = (function()
 {
-	var playerProjectiles = [];
-	var pPSpeed = 300.0;
-	var pPFireRate = .1;
-	var pPFireRateCounter = 0;
-	var pPLifeTime = 2.0;
-	var pPRadius = 3;
-	var pPColorFill = "#FFA";
-	var pPColorStroke = "rgba(255, 255, 0, .5)";
-	var pPThickness = 2;
+	var playerProjectiles = [];						//Array of player shooty projectiles.
+	var pPSpeed = 300.0;							//Speed of player projectiles.
+	var pPFireRate = .1;							//Firing rate of player projectiles.
+	var pPFireRateCounter = 0;						//Counter for firing rate
+	var pPLifeTime = 2.0;							//Lifetime
+	var pPRadius = 3;								//Radius
+	var pPColorFill = "#FFA";						//Fill color
+	var pPColorStroke = "rgba(255, 255, 0, .5)";	//Stroke color
+	var pPThickness = 2;							//Thickness
 	
-	var playerDebris = [];
-	var pDSpeedMin = 5;
-	var pDSpeedRange = 30;
-	var pDLength = 20;
-	var pDRadius = 4;
-	var pDColorFill = "rgba(0, 0, 255, .6)";
-	var pDColorStroke = "rgba(170, 170, 255, .4)";
-	var pDThickness = 2;
+	var playerDebris = [];							//Array of player debris projectiles.
+	var pDSpeedMin = 5;								//Minimum speed of debris particles
+	var pDSpeedRange = 30;							//Maximum speed
+	var pDLength = 20;								//Number of projectiles.
+	var pDRadius = 4;								//Radius
+	var pDColorFill = "rgba(0, 0, 255, .6)";		//Color
+	var pDColorStroke = "rgba(170, 170, 255, .4)";	//Stroke
+	var pDThickness = 2;							//Thickness
 	
+	//Initialize
 	function init()
 	{
-		var pPLength = Math.ceil(pPLifeTime / pPFireRate);
+		//Player shooty projectiles push loop
+		var pPLength = Math.ceil(pPLifeTime / pPFireRate);	//Number of projectiles needed based on fire rate and lifespan.
 		for(var i = 0; i < pPLength; i++)
 		{
 			playerProjectiles.push(new Projectile(pPSpeed));
 		}
+		
+		//Player debris Projectiles push loop
 		for(var i = 0; i < pDLength; i++)
 		{
 			playerDebris.push(new Projectile(Math.random() * pDSpeedRange + pDSpeedMin));
 		}
 	}
 	
+	//Returns the list of player projectiles.
 	function getPlayerProjectiles()
 	{
 		return playerProjectiles;
 	}
 	
-	
+	//Spawns a projectile if fire rate is back to zero.
 	function spawnPlayerProjectile(pos, des)
 	{
 		if(pPFireRateCounter == 0)
@@ -61,15 +66,17 @@ app.projectiles = (function()
 					pPThickness,
 					0))
 				{
-					pPFireRateCounter = pPFireRate;
+					pPFireRateCounter = pPFireRate;	//Reset fire rate.
 					return true;
 				}
 			}
 		}
 		
+		//Return false if a projectile did not spawn.
 		return false;
 	}
 	
+	//Draw player projectiles.
 	function drawPlayerProjectiles(ctx)
 	{
 		for(var i = 0; i < playerProjectiles.length; i++)
@@ -78,6 +85,7 @@ app.projectiles = (function()
 		}
 	}	
 	
+	//Move player projectiles.
 	function movePlayerProjectiles(dt)
 	{
 		for(var i = 0; i < playerProjectiles.length; i++)
@@ -86,6 +94,7 @@ app.projectiles = (function()
 		}
 	}
 	
+	//Counts down the fire rate.
 	function tickPlayerFireRate(dt)
 	{
 		pPFireRateCounter -= dt;
@@ -95,6 +104,7 @@ app.projectiles = (function()
 		}
 	}
 	
+	//Spawns all player debris simultaneously.
 	function spawnPlayerDebris(pos, vel, pDLifeTime)
 	{
 		for(var i = 0; i < playerDebris.length; i++)
@@ -111,6 +121,7 @@ app.projectiles = (function()
 		}
 	}
 	
+	//Draw all player debris.
 	function drawPlayerDebris(ctx)
 	{
 		for(var i = 0; i < playerDebris.length; i++)
@@ -119,6 +130,7 @@ app.projectiles = (function()
 		}
 	}	
 	
+	//Move all player debris.
 	function movePlayerDebris(dt)
 	{
 		for(var i = 0; i < playerDebris.length; i++)
@@ -127,6 +139,7 @@ app.projectiles = (function()
 		}
 	}
 	
+	//Reset. Kills all player projectiles.
 	function reset()
 	{
 		for(var i = 0; i < playerProjectiles.length; i++)

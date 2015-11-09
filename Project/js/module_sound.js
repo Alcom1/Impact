@@ -8,11 +8,11 @@ var app = app || {};
 app.sound = (function()
 {
 	console.log("sound.js module loaded");
-	var bgAudio = undefined;
-	var pShootAudio = undefined;
-	var tShootAudio = undefined;
+	var bgAudio = undefined;		//Background audio
+	var pShootAudio = undefined;	//Audio for player firing
+	var tShootAudio = undefined;	//Audio for turret firing
 	
-
+	//Init
 	function init()
 	{
 		bgAudio = document.querySelector("#bgAudio");
@@ -24,31 +24,38 @@ app.sound = (function()
 		tShootAudio.volume = 0.3;
 	}
 	
+	//Play background audio.
 	function playBGAudio()
 	{
 		bgAudio.play();
 	}
 	
+	//Stop and reset background audio.
 	function stopBGAudio()
 	{
 		bgAudio.pause();
 		bgAudio.currentTime = 0;
 	}
 	
+	//Pause pause background audio.
 	function pauseBGAudio()
 	{
 		bgAudio.pause();
 	}
 	
+	//Play Player shooting sfx.
 	function playPShootAudio()
 	{
 		pShootAudio.pause();
 		pShootAudio.currentTime = 0;
 		pShootAudio.play();
 	}
-	
+
+	//Play Turret shooting sfx.
 	function playTShootAudio()
 	{
+		tShootAudio.pause();
+		tShootAudio.currentTime = 0;
 		tShootAudio.play();
 	}
 	
