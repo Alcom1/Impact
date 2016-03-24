@@ -40,7 +40,7 @@ Shape.prototype.getEdgeLength = function(index)
 	return(
 		this.getVertex(index).getSub(
 			this.getVertex(
-				(index + 1) % this.getVertexCount())).magnitude());
+				(index + 1) % this.getVertexCount())).getMagnitude());
 }
 
 //Get average lengths of edges	
@@ -61,7 +61,7 @@ Shape.prototype.getArea = function()
 	var area = 0;
 	for(var i = 0; i < this.getVertexCount(); i++)
 	{
-		area += Math.abs(this.getVertex(i).cross(this.getVertex((i + 1) % this.getVertexCount())));
+		area += Math.abs(this.getVertex(i).getCross(this.getVertex((i + 1) % this.getVertexCount())));
 	}
 	return area;
 }
@@ -90,7 +90,7 @@ Shape.prototype.draw = function(ctx)
 	ctx.beginPath();
 	for(var i = 0; i < this.getVertexCount(); i++)
 	{
-		ctx.lineTo(this.getVertex(i).xPos, this.getVertex(i).yPos);
+		ctx.lineTo(this.getVertex(i).x, this.getVertex(i).y);
 	}
 	ctx.closePath();
 	ctx.fill();

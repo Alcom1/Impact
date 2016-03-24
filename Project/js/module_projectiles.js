@@ -57,7 +57,7 @@ app.projectiles = (function()
 			for(var i = 0; i < playerProjectiles.length; i++)
 			{
 				if(playerProjectiles[i].spawn(
-					new Vect(pos.xPos, pos.yPos, 0), 
+					new Vect(pos.x, pos.y, 0), 
 					des,
 					pPLifeTime,
 					pPRadius,

@@ -57,8 +57,8 @@ Projectile.prototype.draw = function(ctx)
 		ctx.save();
 		ctx.beginPath();
 		ctx.arc(
-			this.pos.xPos, 
-			this.pos.yPos, 
+			this.pos.x, 
+			this.pos.y, 
 			this.radius, 
 			0, 
 			Math.PI * 2);

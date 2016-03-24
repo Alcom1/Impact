@@ -15,8 +15,8 @@ var Mesh = function(x, y, colorFill, colorStroke, thickness, edgeCount, radius, 
 Mesh.prototype.get = function()
 {
 	return new Mesh(
-		this.pos.xPos,
-		this.pos.yPos,
+		this.pos.x,
+		this.pos.y,
 		this.colorFill,
 		this.colorStroke,
 		this.thickness,
@@ -40,7 +40,7 @@ Mesh.prototype.draw = function(ctx)
 	ctx.fillStyle = this.colorFill;
 	ctx.strokeStyle = this.colorStroke;
 	ctx.lineWidth = this.thickness;
-	ctx.translate(this.pos.xPos, this.pos.yPos);
+	ctx.translate(this.pos.x, this.pos.y);
 	this.shape.draw(ctx);
 	ctx.restore();
 }
@@ -52,18 +52,18 @@ Mesh.prototype.checkCollision = function(gx, gy)
     //perform a barycentric comparison with the explicit point. Comparison checks if point is in triangle.
 	for(var i = 0; i < this.shape.getVertexCount(); i++)
 	{
-		var bx = this.shape.getVertex(i).xPos;		//x coor of vertex b
-		var by = this.shape.getVertex(i).yPos;		//y coor of vertex b
+		var bx = this.shape.getVertex(i).x;		//x coor of vertex b
+		var by = this.shape.getVertex(i).y;		//y coor of vertex b
 		var cx = this.shape.getVertex(				//x coor of vertex c
 			i + 1 < this.shape.getVertexCount() ?
 			i + 1 :
-			0).xPos;
+			0).x;
 		var cy = this.shape.getVertex(				//x coor of vertex c
 			i + 1 < this.shape.getVertexCount() ?
 			i + 1 :
-			0).yPos;
-		var px = gx - this.pos.xPos;				//Move px to relative position.
-		var py = gy - this.pos.yPos;				//Move py to relative position.
+			0).y;
+		var px = gx - this.pos.x;				//Move px to relative position.
+		var py = gy - this.pos.y;				//Move py to relative position.
 		var div = bx * cy - cx * by;				//Denominator of barycentric formula
 		var s = (px * cy - cx * py) / div;			//Barycentric coor s
 		var t = (bx * py - px * by) / div;			//Barycentric coor t

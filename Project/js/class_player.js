@@ -18,8 +18,8 @@ Player.prototype.draw = function(ctx)
 		ctx.save();
 		ctx.beginPath();
 		ctx.arc(
-			this.pos.xPos, 
-			this.pos.yPos, 
+			this.pos.x, 
+			this.pos.y, 
 			12, 
 			0, 
 			Math.PI * 2);
@@ -44,7 +44,7 @@ Player.prototype.move = function()
 //Limits the velocity magnitude to the maxSpeed of the player.
 Player.prototype.limitSpeed = function()
 {
-	if(this.vel.magnitude() > this.maxSpeed)
+	if(this.vel.getMagnitude() > this.maxSpeed)
 	{
 		this.vel = this.vel.getNorm().getMult(this.maxSpeed);
 	}

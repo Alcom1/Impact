@@ -22,7 +22,7 @@ app.main =
     canvas : undefined,			// Canvas
     ctx : undefined,			// Canvas context
    	lastTime : 0, 				// used by calculateDeltaTime() 
-    debug : false,				// debug
+    debug : true,				// debug
 	gameState : undefined,		// Game state
 	saveImage : undefined,		// Saved image from canvas to be used in results screen.
 	mouseDown : false,			// If mouse is down.
@@ -190,7 +190,7 @@ app.main =
 			if(playerProjectiles[i].getActive())
 			{
 				//If projectile is beyond border, kill it.
-				if(playerProjectiles[i].pos.magnitude() > this.HEIGHT / 2)
+				if(playerProjectiles[i].pos.getMagnitude() > this.HEIGHT / 2)
 				{
 					playerProjectiles[i].kill();
 				}
@@ -199,7 +199,7 @@ app.main =
 				for(var j = 0; j < this.meshes.length; j++)
 				{
 					//If mesh collapsed based on projectile position. (If damage from projectile occured)
-					if(this.meshes[j].collapse(this.meshes[j].checkCollision(playerProjectiles[i].getPos().xPos, playerProjectiles[i].getPos().yPos)))
+					if(this.meshes[j].collapse(this.meshes[j].checkCollision(playerProjectiles[i].getPos().x, playerProjectiles[i].getPos().y)))
 					{
 						playerProjectiles[i].kill();	//Kill the projectile.
 						
@@ -214,7 +214,7 @@ app.main =
 		}
 		
 		//If player is beyond boundary, kill the player.
-		if(this.testPlayer.active && this.testPlayer.pos.magnitude() > this.HEIGHT / 2)
+		if(this.testPlayer.active && this.testPlayer.pos.getMagnitude() > this.HEIGHT / 2)
 		{
 			this.killPlayer();
 		}
@@ -222,7 +222,7 @@ app.main =
 		//Player collision. If player is active and collides with mesh, kill the player.
 		for(var i = 0; i < this.meshes.length; i++)
 		{		
-			if(this.testPlayer.active && this.meshes[i].checkCollision(this.testPlayer.pos.xPos, this.testPlayer.pos.yPos) != -1)
+			if(this.testPlayer.active && this.meshes[i].checkCollision(this.testPlayer.pos.x, this.testPlayer.pos.y) != -1)
 			{
 				this.killPlayer();
 			}
@@ -232,22 +232,22 @@ app.main =
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_W])	//Accel north
 		{
 			//console.log("MOVE NORTH");
-			this.testPlayer.vel.yPos -= 8 * dt;
+			this.testPlayer.vel.y -= 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_D])	//Accel east
 		{
 			//console.log("MOVE EAST");
-			this.testPlayer.vel.xPos += 8 * dt;
+			this.testPlayer.vel.x += 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_S])	//Accel south
 		{
 			//console.log("MOVE SOUTH");
-			this.testPlayer.vel.yPos += 8 * dt;
+			this.testPlayer.vel.y += 8 * dt;
 		}
 		if(myKeys.keydown[myKeys.KEYBOARD.KEY_A])	//Accel west
 		{
 			//console.log("MOVE WEST");
-			this.testPlayer.vel.xPos -= 8 * dt;
+			this.testPlayer.vel.x -= 8 * dt;
 		}
 		
 		//Limit speed and move player
