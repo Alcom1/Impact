@@ -52,25 +52,25 @@ Mesh.prototype.checkCollision = function(gx, gy)
     //perform a barycentric comparison with the explicit point. Comparison checks if point is in triangle.
 	for(var i = 0; i < this.shape.getVertexCount(); i++)
 	{
-		var bx = this.shape.getVertex(i).x;		//x coor of vertex b
-		var by = this.shape.getVertex(i).y;		//y coor of vertex b
-		var cx = this.shape.getVertex(				//x coor of vertex c
+        var mouseR = new Vect(gx, gy, 0).getSub(this.pos);  //Relative mouse position.
+        var pointA = this.shape.getVertex(i);
+        var pointB = this.shape.getVertex(
 			i + 1 < this.shape.getVertexCount() ?
 			i + 1 :
-			0).x;
-		var cy = this.shape.getVertex(				//x coor of vertex c
-			i + 1 < this.shape.getVertexCount() ?
-			i + 1 :
-			0).y;
-		var px = gx - this.pos.x;				//Move px to relative position.
-		var py = gy - this.pos.y;				//Move py to relative position.
-		var div = bx * cy - cx * by;				//Denominator of barycentric formula
-		var s = (px * cy - cx * py) / div;			//Barycentric coor s
-		var t = (bx * py - px * by) / div;			//Barycentric coor t
-		if(s > 0 && t > 0 && s + t < 1)				//Barycentric comparison for collision
+			0);
+        
+        var crossAB = pointA.getCross(pointB);
+        var crossMB = mouseR.getCross(pointB);
+        var crossAM = pointA.getCross(mouseR);
+        
+        var s = crossMB / crossAB;
+        var t = crossAM / crossAB;
+        
+        if(s > 0 && t > 0 && s + t < 1)	//Barycentric comparison for collision
 		{
 			return i;	//Return index representing collided triangle.
 		}
+        
 	}
 	
 	//Return -1 if no collision occured.
